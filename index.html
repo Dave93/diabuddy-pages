@@ -7,131 +7,128 @@
     <meta name="description" content="AI-powered nutrition tracking for people with diabetes. Scan food with your camera, get instant analysis, and manage your health.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #050505;
-            --bg-card: rgba(255,255,255,0.03);
-            --border: rgba(255,255,255,0.06);
-            --border-hover: rgba(255,255,255,0.12);
-            --text: #fafafa;
-            --text-dim: #999;
-            --text-muted: #666;
-            --accent: #00e0b8;
-            --accent-dim: rgba(0,224,184,0.08);
-            --accent-glow: rgba(0,224,184,0.15);
-            --warn: #ff6b6b;
-            --warn-dim: rgba(255,107,107,0.08);
-            --gold: #ffc857;
-            --gold-dim: rgba(255,200,87,0.08);
-            --blue: #6ea8fe;
-            --blue-dim: rgba(110,168,254,0.08);
-            --serif: 'Instrument Serif', Georgia, serif;
-            --sans: 'Geist', -apple-system, sans-serif;
+            --bg: #0A0A0C;
+            --bg-raised: #111114;
+            --bg-card: rgba(255,255,255,0.022);
+            --border: rgba(255,255,255,0.055);
+            --border-hover: rgba(255,255,255,0.11);
+            --text: #EDEEF0;
+            --text-dim: #9CA3AF;
+            --text-muted: #5C6370;
+            --accent: #14B8A6;
+            --accent-soft: rgba(20,184,166,0.08);
+            --accent-glow: rgba(20,184,166,0.14);
+            --amber: #F59E0B;
+            --amber-soft: rgba(245,158,11,0.08);
+            --rose: #F43F5E;
+            --rose-soft: rgba(244,63,94,0.07);
+            --sky: #38BDF8;
+            --sky-soft: rgba(56,189,248,0.07);
+            --lime: #84CC16;
+            --lime-soft: rgba(132,204,22,0.07);
+            --pink: #EC4899;
+            --pink-soft: rgba(236,72,153,0.06);
+            --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+            --body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         html { scroll-behavior: smooth; }
+
         body {
-            font-family: var(--sans);
+            font-family: var(--body);
             background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             line-height: 1.6;
+            font-weight: 400;
         }
 
-        /* Grain overlay */
+        ::selection { background: rgba(20,184,166,0.25); }
+
+        /* ===== GRAIN ===== */
         .grain {
-            position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.025;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.022;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
 
         /* ===== NAV ===== */
         .nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 16px 24px;
-            transition: padding 0.4s var(--ease);
+            padding: 20px 24px;
+            transition: padding 0.5s var(--ease);
         }
-        .nav.scrolled { padding: 10px 24px; }
+        .nav.is-scrolled { padding: 12px 24px; }
         .nav-inner {
-            max-width: 1200px; margin: 0 auto;
+            max-width: 1180px; margin: 0 auto;
             display: flex; align-items: center; justify-content: space-between;
-            background: rgba(5,5,5,0.6);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(10,10,12,0.55);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 12px 12px 12px 24px;
-            transition: border-radius 0.4s var(--ease), background 0.4s;
+            border-radius: 18px;
+            padding: 10px 10px 10px 20px;
+            transition: all 0.5s var(--ease);
         }
-        .nav.scrolled .nav-inner {
+        .nav.is-scrolled .nav-inner {
             border-radius: 100px;
-            background: rgba(5,5,5,0.85);
+            background: rgba(10,10,12,0.8);
+            padding: 8px 8px 8px 20px;
         }
         .nav-brand {
-            display: flex; align-items: center; gap: 12px;
+            display: flex; align-items: center; gap: 11px;
             text-decoration: none; color: var(--text);
-            font-weight: 600; font-size: 16px;
-            letter-spacing: -0.02em;
-        }
-        .nav-logo {
-            width: 34px; height: 34px;
-            border-radius: 10px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .nav-logo img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-        }
-        .nav-links { display: flex; align-items: center; gap: 2px; }
-        .nav-links a {
-            color: var(--text-muted); text-decoration: none;
-            font-size: 13.5px; font-weight: 500;
-            padding: 8px 16px; border-radius: 100px;
-            transition: all 0.3s var(--ease);
+            font-weight: 600; font-size: 15.5px;
             letter-spacing: -0.01em;
         }
-        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .nav-icon {
+            width: 32px; height: 32px;
+            border-radius: 9px; overflow: hidden; flex-shrink: 0;
+        }
+        .nav-icon img { width: 100%; height: 100%; display: block; }
+        .nav-right { display: flex; align-items: center; gap: 3px; }
+        .nav-right a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 13.5px; font-weight: 500;
+            padding: 7px 14px; border-radius: 100px;
+            transition: all 0.3s var(--ease);
+            letter-spacing: 0.005em;
+        }
+        .nav-right a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+        .lang-sw {
+            display: flex; align-items: center; gap: 1px;
+            padding: 3px; margin: 0 4px;
+            background: rgba(255,255,255,0.035);
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .lang-b {
+            padding: 5px 9px; border-radius: 100px;
+            font-size: 11px; font-weight: 600; font-family: var(--body);
+            color: var(--text-muted); cursor: pointer;
+            border: none; background: none;
+            transition: all 0.25s var(--ease);
+            letter-spacing: 0.04em;
+        }
+        .lang-b:hover { color: var(--text-dim); }
+        .lang-b.on { background: rgba(255,255,255,0.09); color: var(--text); }
         .nav-cta {
             background: var(--text) !important; color: var(--bg) !important;
-            font-weight: 600 !important; padding: 9px 20px !important;
-            border-radius: 100px !important;
+            font-weight: 600 !important; padding: 8px 18px !important;
+            font-size: 13px !important;
         }
-        .nav-cta:hover { opacity: 0.9; transform: scale(1.02); }
-
-        /* Language switcher */
-        .lang-switch {
-            display: flex; align-items: center; gap: 2px;
-            margin-right: 4px;
-            padding: 4px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 100px;
-            border: 1px solid var(--border);
-        }
-        .lang-btn {
-            padding: 5px 10px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            border: none;
-            background: none;
-            transition: all 0.3s var(--ease);
-            letter-spacing: 0.02em;
-            font-family: var(--sans);
-        }
-        .lang-btn:hover { color: var(--text); }
-        .lang-btn.active {
-            background: rgba(255,255,255,0.1);
-            color: var(--text);
-        }
+        .nav-cta:hover { opacity: 0.88; transform: scale(1.02); }
 
         /* ===== HERO ===== */
         .hero {
@@ -139,712 +136,512 @@
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             text-align: center;
-            padding: 160px 24px 120px;
+            padding: 160px 24px 100px;
             position: relative; overflow: hidden;
         }
         .hero-glow {
-            position: absolute; top: -20%; left: 50%;
-            transform: translateX(-50%);
-            width: 900px; height: 600px;
-            background: radial-gradient(ellipse at center, var(--accent-glow), transparent 70%);
-            pointer-events: none;
-            opacity: 0;
+            position: absolute; top: -25%; left: 50%; transform: translateX(-50%);
+            width: 1000px; height: 700px;
+            background: radial-gradient(ellipse at 50% 40%, var(--accent-glow), transparent 65%);
+            pointer-events: none; opacity: 0;
         }
-        .hero-grid-bg {
-            position: absolute; inset: 0;
+        .hero-grid {
+            position: absolute; inset: 0; pointer-events: none;
             background-image:
-                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-            background-size: 80px 80px;
-            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-            pointer-events: none;
+                linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
         }
 
         .hero-pill {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 6px 16px 6px 8px;
-            background: var(--accent-dim);
-            border: 1px solid rgba(0,224,184,0.12);
+            display: inline-flex; align-items: center; gap: 9px;
+            padding: 5px 16px 5px 7px;
+            background: var(--accent-soft);
+            border: 1px solid rgba(20,184,166,0.12);
             border-radius: 100px;
             font-size: 13px; font-weight: 500;
             color: var(--accent);
-            margin-bottom: 40px;
+            margin-bottom: 44px;
+            position: relative; z-index: 1;
             opacity: 0;
         }
-        .hero-pill-dot {
-            width: 8px; height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            position: relative;
+        .hero-dot {
+            width: 8px; height: 8px; background: var(--accent);
+            border-radius: 50%; position: relative;
         }
-        .hero-pill-dot::after {
-            content: ''; position: absolute; inset: -3px;
+        .hero-dot::after {
+            content: ''; position: absolute; inset: -4px;
             background: var(--accent); border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
+            animation: dotPing 2.2s ease-in-out infinite;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0; transform: scale(2.5); }
+        @keyframes dotPing {
+            0%,100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0; transform: scale(2.8); }
         }
 
         .hero h1 {
-            font-family: var(--sans);
-            font-size: clamp(44px, 7.5vw, 88px);
+            font-family: var(--body);
+            font-size: clamp(40px, 7vw, 80px);
             font-weight: 700;
             letter-spacing: -0.045em;
-            line-height: 0.95;
-            margin-bottom: 32px;
+            line-height: 0.98;
+            margin-bottom: 28px;
+            position: relative; z-index: 1;
             opacity: 0;
         }
-        .hero h1 em {
-            font-family: var(--serif);
+        .hero h1 i {
+            font-family: var(--display);
             font-style: italic;
             font-weight: 400;
-            background: linear-gradient(135deg, var(--accent), #00b894, var(--blue));
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent), #0EA5E9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .hero-desc {
-            font-size: clamp(16px, 2vw, 19px);
-            color: var(--text-dim);
-            max-width: 520px;
-            line-height: 1.7;
-            margin-bottom: 48px;
-            font-weight: 400;
-            letter-spacing: -0.01em;
-            opacity: 0;
-        }
-
-        .hero-actions {
-            display: flex; gap: 16px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            opacity: 0;
-        }
-
-        .btn-primary {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: var(--text); color: var(--bg);
-            padding: 16px 32px; border-radius: 100px;
-            text-decoration: none;
-            font-weight: 600; font-size: 15px;
-            letter-spacing: -0.01em;
-            transition: all 0.4s var(--ease);
-            position: relative;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(255,255,255,0.08);
-        }
-        .btn-primary svg { width: 20px; height: 20px; }
-
-        .btn-outline {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: var(--text-dim); text-decoration: none;
-            font-size: 15px; font-weight: 500;
-            padding: 16px 28px; border-radius: 100px;
-            border: 1px solid var(--border);
-            transition: all 0.4s var(--ease);
-            letter-spacing: -0.01em;
-        }
-        .btn-outline:hover {
-            color: var(--text); border-color: var(--border-hover);
-            background: rgba(255,255,255,0.03);
-        }
-
-        /* ===== PHONE MOCKUP ===== */
-        .hero-phone {
-            margin-top: 80px;
-            perspective: 1200px;
-            opacity: 0;
-        }
-        .phone-frame {
-            width: 280px; height: 560px;
-            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-            border-radius: 40px;
-            border: 2px solid rgba(255,255,255,0.08);
-            padding: 12px;
-            position: relative;
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.04),
-                0 40px 80px -20px rgba(0,0,0,0.8),
-                0 0 100px rgba(0,224,184,0.06);
-            transform: rotateX(8deg);
-            transition: transform 0.6s var(--ease);
-        }
-        .phone-frame:hover { transform: rotateX(0deg) translateY(-8px); }
-        .phone-notch {
-            width: 120px; height: 28px;
-            background: #000;
-            border-radius: 0 0 18px 18px;
-            position: absolute; top: 12px; left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-        }
-        .phone-screen {
-            width: 100%; height: 100%;
-            background: linear-gradient(180deg, #0f1a14, #050505);
-            border-radius: 30px;
-            overflow: hidden;
-            position: relative;
-        }
-        .phone-ui {
-            padding: 48px 20px 20px;
-        }
-        .phone-header {
-            font-size: 22px; font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 4px;
-        }
-        .phone-sub {
-            font-size: 11px; color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-        .phone-cal-card {
-            background: rgba(0,224,184,0.06);
-            border: 1px solid rgba(0,224,184,0.1);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-        }
-        .phone-cal-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
-        .phone-cal-val {
-            font-size: 36px; font-weight: 700;
-            letter-spacing: -0.04em;
-            color: var(--accent);
-            line-height: 1.1;
-        }
-        .phone-cal-of { font-size: 13px; color: var(--text-muted); font-weight: 400; }
-        .phone-progress {
-            height: 4px; border-radius: 4px;
-            background: rgba(255,255,255,0.06);
-            margin-top: 10px; overflow: hidden;
-        }
-        .phone-progress-bar {
-            height: 100%; border-radius: 4px;
-            background: linear-gradient(90deg, var(--accent), #00b894);
-            width: 0%;
-            transition: width 1.5s var(--ease);
-        }
-        .phone-macros {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 8px; margin-bottom: 12px;
-        }
-        .phone-macro {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px; padding: 10px 8px;
-            text-align: center;
-        }
-        .phone-macro-val {
-            font-size: 16px; font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-        .phone-macro-label {
-            font-size: 9px; color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .phone-food-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 0;
-            border-top: 1px solid rgba(255,255,255,0.04);
-        }
-        .phone-food-dot {
-            width: 32px; height: 32px;
-            border-radius: 10px;
-            display: grid; place-items: center;
-            font-size: 16px;
-        }
-        .phone-food-name { font-size: 13px; font-weight: 500; }
-        .phone-food-cal { font-size: 11px; color: var(--text-muted); }
-        .phone-food-badge {
-            margin-left: auto;
-            font-size: 9px; font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 100px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* ===== LOGOS / TRUST ===== */
-        .trust-bar {
-            padding: 80px 24px 60px;
-            text-align: center;
-            opacity: 0;
-        }
-        .trust-label {
-            font-size: 12px; font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--text-muted);
-            margin-bottom: 28px;
-        }
-        .trust-logos {
-            display: flex; align-items: center;
-            justify-content: center;
-            gap: 56px; flex-wrap: wrap;
-        }
-        .trust-logos span {
-            font-size: 14px; font-weight: 600;
-            color: var(--text-muted);
-            opacity: 0.4;
-            letter-spacing: -0.01em;
-            transition: opacity 0.3s;
-        }
-        .trust-logos span:hover { opacity: 0.7; }
-
-        /* ===== SECTION SYSTEM ===== */
-        .section {
-            padding: 140px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .section-label {
-            font-size: 12px; font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--accent);
-            margin-bottom: 16px;
-        }
-        .section-heading {
-            font-family: var(--sans);
-            font-size: clamp(32px, 5vw, 56px);
-            font-weight: 700;
-            letter-spacing: -0.04em;
-            line-height: 1.05;
-            margin-bottom: 16px;
-        }
-        .section-heading em {
-            font-family: var(--serif);
-            font-style: italic;
-            font-weight: 400;
-        }
-        .section-sub {
-            font-size: 17px;
+        .hero-sub {
+            font-size: clamp(15.5px, 1.8vw, 18px);
             color: var(--text-dim);
             max-width: 500px;
             line-height: 1.7;
-            letter-spacing: -0.01em;
-        }
-        .section-center { text-align: center; }
-        .section-center .section-sub { margin: 0 auto; }
-
-        /* ===== FEATURES BENTO ===== */
-        .bento {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 12px;
-            margin-top: 80px;
-        }
-        .bento-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 36px 32px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.5s var(--ease);
-        }
-        .bento-card::after {
-            content: '';
-            position: absolute; inset: 0;
-            border-radius: 24px;
+            margin-bottom: 44px;
+            position: relative; z-index: 1;
             opacity: 0;
-            transition: opacity 0.5s;
-            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.02), transparent 40%);
-        }
-        .bento-card:hover { border-color: var(--border-hover); }
-        .bento-card:hover::after { opacity: 1; }
-
-        .b-wide { grid-column: span 7; }
-        .b-narrow { grid-column: span 5; }
-        .b-third { grid-column: span 4; }
-        .b-half { grid-column: span 6; }
-
-        .bento-icon {
-            width: 44px; height: 44px;
-            border-radius: 12px;
-            display: grid; place-items: center;
-            margin-bottom: 24px;
-        }
-        .bento-card h3 {
-            font-size: 18px; font-weight: 600;
-            letter-spacing: -0.025em;
-            margin-bottom: 8px;
-        }
-        .bento-card p {
-            font-size: 14px; color: var(--text-dim);
-            line-height: 1.7; letter-spacing: -0.005em;
+            font-weight: 400;
         }
 
-        /* Animated scanner */
-        .scanner-vis {
-            margin-top: 28px;
-            height: 120px;
-            border-radius: 16px;
-            background: linear-gradient(180deg, rgba(0,224,184,0.02), rgba(0,224,184,0.06));
-            border: 1px solid rgba(0,224,184,0.06);
-            position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
+        .hero-btns {
+            display: flex; gap: 14px; align-items: center;
+            justify-content: center; flex-wrap: wrap;
+            position: relative; z-index: 1;
+            opacity: 0;
         }
-        .scanner-crosshair {
-            width: 48px; height: 48px;
+        .btn-fill {
+            display: inline-flex; align-items: center; gap: 9px;
+            background: var(--text); color: var(--bg);
+            padding: 14px 28px; border-radius: 100px;
+            text-decoration: none; font-weight: 600; font-size: 14.5px;
+            transition: all 0.4s var(--ease);
+            letter-spacing: -0.005em;
+        }
+        .btn-fill:hover {
+            transform: translateY(-2px) scale(1.015);
+            box-shadow: 0 20px 50px rgba(255,255,255,0.07);
+        }
+        .btn-fill svg { width: 18px; height: 18px; }
+        .btn-line {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--text-dim); text-decoration: none;
+            font-size: 14.5px; font-weight: 500;
+            padding: 14px 24px; border-radius: 100px;
+            border: 1px solid var(--border);
+            transition: all 0.4s var(--ease);
+        }
+        .btn-line:hover {
+            color: var(--text); border-color: var(--border-hover);
+            background: rgba(255,255,255,0.025);
+        }
+
+        /* ===== PHONE ===== */
+        .hero-device {
+            margin-top: 72px;
+            perspective: 1200px;
+            position: relative; z-index: 1;
+            opacity: 0;
+        }
+        .device {
+            width: 272px; height: 548px;
+            background: linear-gradient(160deg, #1C1C1F, #0C0C0E);
+            border-radius: 42px;
+            border: 1.5px solid rgba(255,255,255,0.07);
+            padding: 10px;
             position: relative;
+            box-shadow:
+                0 0 0 0.5px rgba(255,255,255,0.03),
+                0 50px 100px -25px rgba(0,0,0,0.7),
+                0 0 80px rgba(20,184,166,0.04);
+            transform: rotateX(6deg);
+            transition: transform 0.7s var(--ease);
         }
-        .scanner-crosshair span {
-            position: absolute;
-            background: var(--accent);
-            border-radius: 2px;
+        .device:hover { transform: rotateX(0) translateY(-6px); }
+        .device-notch {
+            width: 110px; height: 26px; background: #0A0A0C;
+            border-radius: 0 0 16px 16px;
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 2;
         }
-        .scanner-crosshair span:nth-child(1) { top: 0; left: 0; width: 14px; height: 2px; }
-        .scanner-crosshair span:nth-child(2) { top: 0; left: 0; width: 2px; height: 14px; }
-        .scanner-crosshair span:nth-child(3) { top: 0; right: 0; width: 14px; height: 2px; }
-        .scanner-crosshair span:nth-child(4) { top: 0; right: 0; width: 2px; height: 14px; }
-        .scanner-crosshair span:nth-child(5) { bottom: 0; left: 0; width: 14px; height: 2px; }
-        .scanner-crosshair span:nth-child(6) { bottom: 0; left: 0; width: 2px; height: 14px; }
-        .scanner-crosshair span:nth-child(7) { bottom: 0; right: 0; width: 14px; height: 2px; }
-        .scanner-crosshair span:nth-child(8) { bottom: 0; right: 0; width: 2px; height: 14px; }
-        .scanner-beam {
-            position: absolute; left: 10%; right: 10%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            box-shadow: 0 0 20px var(--accent-glow);
-            animation: scanBeam 2.5s ease-in-out infinite;
+        .device-screen {
+            width: 100%; height: 100%;
+            background: linear-gradient(170deg, #0D1512, #0A0A0C);
+            border-radius: 33px; overflow: hidden;
         }
-        @keyframes scanBeam {
-            0%, 100% { top: 15%; opacity: 0.3; }
-            50% { top: 80%; opacity: 0.8; }
+        .d-ui { padding: 44px 18px 18px; }
+        .d-head { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 3px; }
+        .d-date { font-size: 10.5px; color: var(--text-muted); margin-bottom: 14px; }
+        .d-cal {
+            background: rgba(20,184,166,0.05);
+            border: 1px solid rgba(20,184,166,0.08);
+            border-radius: 14px; padding: 14px; margin-bottom: 10px;
         }
-
-        /* Safety alert viz */
-        .alert-viz {
-            margin-top: 24px;
-            display: flex; flex-direction: column; gap: 8px;
+        .d-cal-label { font-size: 9.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .d-cal-num { font-size: 32px; font-weight: 700; color: var(--accent); letter-spacing: -0.04em; line-height: 1.1; }
+        .d-cal-of { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+        .d-bar { height: 3px; border-radius: 3px; background: rgba(255,255,255,0.05); margin-top: 8px; overflow: hidden; }
+        .d-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), #0EA5E9); width: 0%; transition: width 1.8s var(--ease); }
+        .d-macros { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-bottom: 10px; }
+        .d-macro { background: rgba(255,255,255,0.025); border-radius: 10px; padding: 9px 6px; text-align: center; }
+        .d-macro b { font-size: 14px; display: block; letter-spacing: -0.02em; }
+        .d-macro span { font-size: 8.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+        .d-item {
+            display: flex; align-items: center; gap: 9px;
+            padding: 9px 0; border-top: 1px solid rgba(255,255,255,0.035);
         }
-        .alert-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 13px; font-weight: 500;
-        }
-        .alert-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%; flex-shrink: 0;
-        }
-
-        /* Chart bars */
-        .chart-vis {
-            display: flex; align-items: flex-end;
-            gap: 6px; height: 110px;
-            margin-top: 24px;
-            padding-top: 8px;
-            border-top: 1px solid var(--border);
-        }
-        .chart-bar {
-            flex: 1;
-            border-radius: 6px 6px 2px 2px;
-            transform-origin: bottom;
-            transform: scaleY(0);
+        .d-item-ico { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; font-size: 14px; }
+        .d-item-name { font-size: 12px; font-weight: 500; }
+        .d-item-kcal { font-size: 10px; color: var(--text-muted); }
+        .d-item-tag {
+            margin-left: auto; font-size: 8.5px; font-weight: 600;
+            padding: 2px 7px; border-radius: 100px;
+            text-transform: uppercase; letter-spacing: 0.04em;
         }
 
-        /* Macro pills */
-        .macro-pills {
-            display: flex; flex-wrap: wrap; gap: 8px;
-            margin-top: 24px;
+        /* ===== TRUST ===== */
+        .trust {
+            padding: 80px 24px 40px; text-align: center; opacity: 0;
         }
-        .macro-pill {
-            padding: 8px 14px;
-            border-radius: 100px;
-            font-size: 12px; font-weight: 600;
-            letter-spacing: 0.01em;
-            border: 1px solid;
+        .trust-label {
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.16em; color: var(--text-muted); margin-bottom: 26px;
         }
+        .trust-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 52px; flex-wrap: wrap;
+        }
+        .trust-row span {
+            font-size: 13.5px; font-weight: 600; color: var(--text-muted);
+            opacity: 0.4; letter-spacing: 0.01em; transition: opacity 0.3s;
+        }
+        .trust-row span:hover { opacity: 0.7; }
+
+        /* ===== SECTION SYS ===== */
+        .sec { padding: 132px 24px; max-width: 1180px; margin: 0 auto; }
+        .sec-label {
+            font-size: 11.5px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.16em; color: var(--accent); margin-bottom: 14px;
+        }
+        .sec-title {
+            font-family: var(--body);
+            font-size: clamp(30px, 4.8vw, 52px);
+            font-weight: 700; letter-spacing: -0.04em;
+            line-height: 1.06; margin-bottom: 14px;
+        }
+        .sec-title i {
+            font-family: var(--display);
+            font-style: italic; font-weight: 400;
+            letter-spacing: -0.015em;
+        }
+        .sec-desc {
+            font-size: 16.5px; color: var(--text-dim);
+            max-width: 480px; line-height: 1.7;
+        }
+        .sec-c { text-align: center; }
+        .sec-c .sec-desc { margin: 0 auto; }
 
         /* ===== HOW IT WORKS ===== */
         .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 80px;
+            display: grid; grid-template-columns: repeat(3,1fr);
+            gap: 10px; margin-top: 72px;
         }
         .step {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px 32px;
-            position: relative;
-            transition: all 0.5s var(--ease);
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 22px; padding: 40px 30px;
+            position: relative; transition: all 0.5s var(--ease);
         }
-        .step:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-4px);
-        }
-        .step-number {
-            font-size: 72px;
-            font-weight: 800;
-            letter-spacing: -0.06em;
-            line-height: 1;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .step:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+        .step-n {
+            font-family: var(--display);
+            font-size: 68px; font-weight: 300;
+            line-height: 1; letter-spacing: -0.04em;
+            margin-bottom: 22px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.02));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .step h3 {
-            font-size: 20px; font-weight: 600;
-            letter-spacing: -0.025em;
-            margin-bottom: 10px;
+            font-size: 19px; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 10px;
         }
-        .step p {
-            font-size: 14.5px; color: var(--text-dim);
-            line-height: 1.7;
-        }
+        .step p { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
         .step:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 50%; right: -7px;
-            width: 14px; height: 1px;
-            background: rgba(255,255,255,0.1);
+            content: ''; position: absolute; top: 50%; right: -6px;
+            width: 12px; height: 1px; background: rgba(255,255,255,0.08);
         }
 
-        /* ===== STATS COUNTER ===== */
-        .stats-divider {
-            max-width: 1200px; margin: 0 auto;
-            padding: 0 24px;
+        /* ===== BENTO ===== */
+        .bento {
+            display: grid; grid-template-columns: repeat(12,1fr);
+            gap: 10px; margin-top: 72px;
         }
-        .stats-inner {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0;
+        .b-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 22px; padding: 34px 30px;
+            position: relative; overflow: hidden;
+            transition: all 0.5s var(--ease);
+        }
+        .b-card::after {
+            content: ''; position: absolute; inset: 0; border-radius: 22px;
+            opacity: 0; transition: opacity 0.5s;
+            background: radial-gradient(600px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.018), transparent 40%);
+        }
+        .b-card:hover { border-color: var(--border-hover); }
+        .b-card:hover::after { opacity: 1; }
+
+        .b-7 { grid-column: span 7; }
+        .b-5 { grid-column: span 5; }
+        .b-4 { grid-column: span 4; }
+        .b-6 { grid-column: span 6; }
+
+        .b-ico {
+            width: 42px; height: 42px; border-radius: 11px;
+            display: grid; place-items: center; margin-bottom: 22px;
+        }
+        .b-card h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 7px; }
+        .b-card p { font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
+
+        /* Scanner */
+        .scan-box {
+            margin-top: 24px; height: 110px;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(20,184,166,0.015), rgba(20,184,166,0.05));
+            border: 1px solid rgba(20,184,166,0.06);
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .scan-cross { width: 44px; height: 44px; position: relative; }
+        .scan-cross b {
+            position: absolute; background: var(--accent); border-radius: 1.5px;
+        }
+        .scan-cross b:nth-child(1){top:0;left:0;width:12px;height:1.5px}
+        .scan-cross b:nth-child(2){top:0;left:0;width:1.5px;height:12px}
+        .scan-cross b:nth-child(3){top:0;right:0;width:12px;height:1.5px}
+        .scan-cross b:nth-child(4){top:0;right:0;width:1.5px;height:12px}
+        .scan-cross b:nth-child(5){bottom:0;left:0;width:12px;height:1.5px}
+        .scan-cross b:nth-child(6){bottom:0;left:0;width:1.5px;height:12px}
+        .scan-cross b:nth-child(7){bottom:0;right:0;width:12px;height:1.5px}
+        .scan-cross b:nth-child(8){bottom:0;right:0;width:1.5px;height:12px}
+        .scan-beam {
+            position: absolute; left: 12%; right: 12%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: 0 0 16px var(--accent-glow);
+            animation: beam 2.8s ease-in-out infinite;
+        }
+        @keyframes beam {
+            0%,100% { top: 12%; opacity: 0.3; }
+            50% { top: 82%; opacity: 0.7; }
+        }
+
+        /* Alerts */
+        .alert-list { margin-top: 20px; display: flex; flex-direction: column; gap: 6px; }
+        .alert-row {
+            display: flex; align-items: center; gap: 9px;
+            padding: 9px 12px; border-radius: 10px;
+            font-size: 12.5px; font-weight: 500;
+        }
+        .alert-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+        /* Chart */
+        .chart-bars {
+            display: flex; align-items: flex-end; gap: 5px;
+            height: 100px; margin-top: 20px;
+            padding-top: 8px; border-top: 1px solid var(--border);
+        }
+        .chart-b {
+            flex: 1; border-radius: 5px 5px 2px 2px;
+            transform-origin: bottom; transform: scaleY(0);
+        }
+
+        /* Macro pills */
+        .m-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
+        .m-pill {
+            padding: 7px 13px; border-radius: 100px;
+            font-size: 11.5px; font-weight: 600;
+            letter-spacing: 0.01em; border: 1px solid;
+        }
+
+        /* ===== STATS ===== */
+        .stats-wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4,1fr);
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
         }
-        .stat {
-            text-align: center;
-            padding: 56px 24px;
+        .stat-cell {
+            text-align: center; padding: 52px 20px;
             border-right: 1px solid var(--border);
         }
-        .stat:last-child { border-right: none; }
-        .stat-num {
-            font-size: clamp(40px, 6vw, 64px);
-            font-weight: 700;
-            letter-spacing: -0.05em;
-            line-height: 1;
-            margin-bottom: 8px;
+        .stat-cell:last-child { border-right: none; }
+        .stat-n {
+            font-family: var(--display);
+            font-size: clamp(38px, 5.5vw, 60px);
+            font-weight: 500; letter-spacing: -0.04em;
+            line-height: 1; margin-bottom: 6px;
         }
-        .stat-text {
-            font-size: 14px; color: var(--text-muted);
-            font-weight: 500;
-        }
+        .stat-t { font-size: 13.5px; color: var(--text-muted); font-weight: 500; }
 
         /* ===== CTA ===== */
         .cta {
-            padding: 180px 24px;
-            text-align: center;
+            padding: 172px 24px; text-align: center;
             position: relative; overflow: hidden;
         }
         .cta-glow {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
             width: 800px; height: 500px;
             background: radial-gradient(ellipse, var(--accent-glow), transparent 65%);
-            pointer-events: none;
-            opacity: 0;
+            pointer-events: none; opacity: 0;
         }
-        .cta .section-heading,
-        .cta .section-sub,
-        .cta .btn-primary {
-            position: relative; z-index: 1;
-        }
-        .cta .section-sub {
-            max-width: 420px;
-            margin: 0 auto 48px;
-        }
+        .cta > * { position: relative; z-index: 1; }
+        .cta .sec-desc { max-width: 400px; margin: 0 auto 44px; }
 
         /* ===== FOOTER ===== */
         .footer {
             border-top: 1px solid var(--border);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 72px 24px 40px;
+            max-width: 1180px; margin: 0 auto;
+            padding: 68px 24px 36px;
         }
         .footer-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 48px;
-            margin-bottom: 64px;
+            display: flex; justify-content: space-between;
+            align-items: flex-start; flex-wrap: wrap;
+            gap: 48px; margin-bottom: 60px;
         }
         .footer-brand {
-            display: flex; align-items: center; gap: 12px;
-            font-weight: 600; font-size: 16px;
-            margin-bottom: 14px;
-            letter-spacing: -0.02em;
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 600; font-size: 15px; margin-bottom: 12px;
+            letter-spacing: -0.01em;
         }
-        .footer-brand-mark {
-            width: 28px; height: 28px;
-            background: linear-gradient(135deg, var(--accent), #00b894);
-            border-radius: 8px;
-            display: grid; place-items: center;
+        .footer-brand-ico {
+            width: 26px; height: 26px; border-radius: 7px; overflow: hidden;
         }
-        .footer-tagline {
-            font-size: 14px; color: var(--text-muted);
-            max-width: 280px; line-height: 1.6;
-        }
-        .footer-cols {
-            display: flex; gap: 80px;
-        }
+        .footer-brand-ico img { width: 100%; height: 100%; display: block; }
+        .footer-tagline { font-size: 13.5px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+        .footer-cols { display: flex; gap: 72px; }
         .footer-col h4 {
-            font-size: 12px; font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--text-dim);
-            margin-bottom: 20px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.12em; color: var(--text-dim); margin-bottom: 18px;
         }
         .footer-col a {
-            display: block; color: var(--text-muted);
-            text-decoration: none; font-size: 14px;
-            padding: 4px 0;
-            transition: color 0.2s;
+            display: block; color: var(--text-muted); text-decoration: none;
+            font-size: 13.5px; padding: 3px 0; transition: color 0.2s;
         }
         .footer-col a:hover { color: var(--text); }
-        .footer-bottom {
-            border-top: 1px solid var(--border);
-            padding-top: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap; gap: 12px;
+        .footer-bot {
+            border-top: 1px solid var(--border); padding-top: 22px;
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 10px;
         }
-        .footer-bottom p {
-            font-size: 13px; color: var(--text-muted);
-        }
+        .footer-bot p { font-size: 12.5px; color: var(--text-muted); }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 900px) {
-            .b-wide, .b-narrow { grid-column: span 12; }
-            .b-third { grid-column: span 6; }
+        @media(max-width:960px) {
+            .b-7,.b-5 { grid-column: span 12; }
+            .b-4 { grid-column: span 6; }
             .steps { grid-template-columns: 1fr; }
             .step::after { display: none; }
-            .stats-inner { grid-template-columns: repeat(2, 1fr); }
-            .stat { border-bottom: 1px solid var(--border); }
+            .stats-grid { grid-template-columns: repeat(2,1fr); }
+            .stat-cell { border-bottom: 1px solid var(--border); }
         }
-        @media (max-width: 640px) {
-            .nav-links a:not(.nav-cta) { display: none; }
+        @media(max-width:640px) {
+            .nav-right a:not(.nav-cta) { display: none; }
+            .lang-sw { margin-right: 4px; }
             .bento { grid-template-columns: 1fr; }
-            .b-wide, .b-narrow, .b-third, .b-half { grid-column: span 1; }
-            .stats-inner { grid-template-columns: repeat(2, 1fr); }
-            .footer-cols { flex-direction: column; gap: 32px; }
+            .b-7,.b-5,.b-4,.b-6 { grid-column: span 1; }
+            .stats-grid { grid-template-columns: repeat(2,1fr); }
+            .footer-cols { flex-direction: column; gap: 28px; }
             .footer-top { flex-direction: column; }
-            .phone-frame { width: 240px; height: 480px; }
+            .device { width: 240px; height: 484px; }
         }
     </style>
 </head>
 <body>
 <div class="grain"></div>
 
-<!-- Nav -->
 <nav class="nav" id="nav">
     <div class="nav-inner">
         <a href="index.html" class="nav-brand">
-            <div class="nav-logo"><img src="icon.png" alt="DiaBuddy"></div>
+            <div class="nav-icon"><img src="icon.png" alt="DiaBuddy"></div>
             DiaBuddy
         </a>
-        <div class="nav-links">
+        <div class="nav-right">
             <a href="#features" data-i18n="nav_features">Features</a>
             <a href="#how" data-i18n="nav_how">How it works</a>
             <a href="support.html" data-i18n="nav_support">Support</a>
-            <div class="lang-switch">
-                <button class="lang-btn active" data-lang="en">EN</button>
-                <button class="lang-btn" data-lang="ru">RU</button>
-                <button class="lang-btn" data-lang="uz">UZ</button>
+            <div class="lang-sw">
+                <button class="lang-b on" data-lang="en">EN</button>
+                <button class="lang-b" data-lang="ru">RU</button>
+                <button class="lang-b" data-lang="uz">UZ</button>
             </div>
             <a href="#" class="nav-cta" data-i18n="nav_cta">Get the App</a>
         </div>
     </div>
 </nav>
 
-<!-- Hero -->
 <section class="hero">
-    <div class="hero-glow" id="hero-glow"></div>
-    <div class="hero-grid-bg"></div>
+    <div class="hero-glow" id="hglow"></div>
+    <div class="hero-grid"></div>
 
     <div class="hero-pill">
-        <span class="hero-pill-dot"></span>
+        <span class="hero-dot"></span>
         <span data-i18n="hero_badge">Now available on the App Store</span>
     </div>
 
-    <h1 data-i18n="hero_title">Scan your food,<br><em>know your numbers.</em></h1>
+    <h1 data-i18n="hero_h1">Scan your food,<br><i>know your numbers.</i></h1>
 
-    <p class="hero-desc" data-i18n="hero_desc">The AI nutrition companion purpose-built for diabetes. Point your camera at any meal, get instant macro analysis, safety alerts, and glycemic ratings.</p>
+    <p class="hero-sub" data-i18n="hero_sub">The AI nutrition companion purpose-built for diabetes. Point your camera at any meal, get instant macro analysis, safety alerts, and glycemic ratings.</p>
 
-    <div class="hero-actions">
-        <a href="#" class="btn-primary">
+    <div class="hero-btns">
+        <a href="#" class="btn-fill">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            <span data-i18n="hero_download">Download for iOS</span>
+            <span data-i18n="hero_dl">Download for iOS</span>
         </a>
-        <a href="#features" class="btn-outline">
+        <a href="#features" class="btn-line">
             <span data-i18n="hero_explore">Explore features</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </a>
     </div>
 
-    <!-- Phone Mockup -->
-    <div class="hero-phone">
-        <div class="phone-frame">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-                <div class="phone-ui">
-                    <div class="phone-header">Today</div>
-                    <div class="phone-sub">Tuesday, Feb 13</div>
-                    <div class="phone-cal-card">
-                        <div class="phone-cal-label">Calories</div>
-                        <div class="phone-cal-val">1,247 <span class="phone-cal-of">/ 2,100</span></div>
-                        <div class="phone-progress"><div class="phone-progress-bar" id="phone-bar"></div></div>
+    <div class="hero-device">
+        <div class="device">
+            <div class="device-notch"></div>
+            <div class="device-screen">
+                <div class="d-ui">
+                    <div class="d-head">Today</div>
+                    <div class="d-date">Tuesday, Feb 13</div>
+                    <div class="d-cal">
+                        <div class="d-cal-label">Calories</div>
+                        <div class="d-cal-num">1,247 <span class="d-cal-of">/ 2,100</span></div>
+                        <div class="d-bar"><div class="d-bar-fill" id="dbar"></div></div>
                     </div>
-                    <div class="phone-macros">
-                        <div class="phone-macro">
-                            <div class="phone-macro-val" style="color:var(--accent)">84g</div>
-                            <div class="phone-macro-label">Protein</div>
-                        </div>
-                        <div class="phone-macro">
-                            <div class="phone-macro-val" style="color:var(--gold)">156g</div>
-                            <div class="phone-macro-label">Carbs</div>
-                        </div>
-                        <div class="phone-macro">
-                            <div class="phone-macro-val" style="color:var(--warn)">42g</div>
-                            <div class="phone-macro-label">Fat</div>
-                        </div>
+                    <div class="d-macros">
+                        <div class="d-macro"><b style="color:var(--accent)">84g</b><span>Protein</span></div>
+                        <div class="d-macro"><b style="color:var(--amber)">156g</b><span>Carbs</span></div>
+                        <div class="d-macro"><b style="color:var(--rose)">42g</b><span>Fat</span></div>
                     </div>
-                    <div class="phone-food-item">
-                        <div class="phone-food-dot" style="background:var(--accent-dim)">🥗</div>
-                        <div>
-                            <div class="phone-food-name">Caesar Salad</div>
-                            <div class="phone-food-cal">320 kcal</div>
-                        </div>
-                        <span class="phone-food-badge" style="background:rgba(0,224,184,0.1);color:var(--accent)">Safe</span>
+                    <div class="d-item">
+                        <div class="d-item-ico" style="background:var(--accent-soft)">🥗</div>
+                        <div><div class="d-item-name">Caesar Salad</div><div class="d-item-kcal">320 kcal</div></div>
+                        <span class="d-item-tag" style="background:rgba(20,184,166,0.1);color:var(--accent)">Safe</span>
                     </div>
-                    <div class="phone-food-item">
-                        <div class="phone-food-dot" style="background:var(--gold-dim)">🍝</div>
-                        <div>
-                            <div class="phone-food-name">Pasta Carbonara</div>
-                            <div class="phone-food-cal">580 kcal</div>
-                        </div>
-                        <span class="phone-food-badge" style="background:rgba(255,200,87,0.1);color:var(--gold)">Caution</span>
+                    <div class="d-item">
+                        <div class="d-item-ico" style="background:var(--amber-soft)">🍝</div>
+                        <div><div class="d-item-name">Pasta Carbonara</div><div class="d-item-kcal">580 kcal</div></div>
+                        <span class="d-item-tag" style="background:rgba(245,158,11,0.1);color:var(--amber)">Caution</span>
                     </div>
-                    <div class="phone-food-item">
-                        <div class="phone-food-dot" style="background:var(--blue-dim)">🫐</div>
-                        <div>
-                            <div class="phone-food-name">Blueberry Yogurt</div>
-                            <div class="phone-food-cal">180 kcal</div>
-                        </div>
-                        <span class="phone-food-badge" style="background:rgba(0,224,184,0.1);color:var(--accent)">Safe</span>
+                    <div class="d-item">
+                        <div class="d-item-ico" style="background:var(--sky-soft)">🫐</div>
+                        <div><div class="d-item-name">Blueberry Yogurt</div><div class="d-item-kcal">180 kcal</div></div>
+                        <span class="d-item-tag" style="background:rgba(20,184,166,0.1);color:var(--accent)">Safe</span>
                     </div>
                 </div>
             </div>
@@ -852,496 +649,322 @@
     </div>
 </section>
 
-<!-- Trust Bar -->
-<div class="trust-bar" id="trust">
+<div class="trust" id="trust">
     <p class="trust-label" data-i18n="trust_label">Built with</p>
-    <div class="trust-logos">
-        <span>OpenAI</span>
-        <span>Supabase</span>
-        <span>Expo</span>
-        <span>React Native</span>
+    <div class="trust-row">
+        <span>OpenAI</span><span>Supabase</span><span>Expo</span><span>React Native</span>
     </div>
 </div>
 
-<!-- Features -->
-<section class="section" id="features">
-    <div class="section-center">
-        <div class="section-label" data-i18n="feat_label">Features</div>
-        <h2 class="section-heading" data-i18n="feat_title">Intelligence meets<br><em>nutrition tracking</em></h2>
-        <p class="section-sub" data-i18n="feat_sub">Every feature designed to give you confidence in what you eat and peace of mind about your health.</p>
+<!-- How it Works -->
+<section class="sec" id="how">
+    <div class="sec-c">
+        <div class="sec-label" data-i18n="how_label">How it works</div>
+        <h2 class="sec-title" data-i18n="how_title">Three steps to<br><i>smarter eating</i></h2>
+        <p class="sec-desc" data-i18n="how_sub">From camera to insight in under five seconds.</p>
     </div>
-
-    <div class="bento">
-        <!-- AI Scanner -->
-        <div class="bento-card b-wide" data-gsap="card">
-            <div class="bento-icon" style="background:var(--accent-dim)">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="var(--accent)" stroke-width="2"/></svg>
-            </div>
-            <h3 data-i18n="feat_scanner_title">AI Food Scanner</h3>
-            <p data-i18n="feat_scanner_desc">Point your camera at any food — a home-cooked meal, restaurant dish, or packaged snack. Our AI identifies what you're eating, estimates portions, and returns a full nutritional breakdown in seconds.</p>
-            <div class="scanner-vis">
-                <div class="scanner-crosshair">
-                    <span></span><span></span><span></span><span></span>
-                    <span></span><span></span><span></span><span></span>
-                </div>
-                <div class="scanner-beam"></div>
-            </div>
+    <div class="steps">
+        <div class="step" data-g="step">
+            <div class="step-n">01</div>
+            <h3 data-i18n="s1_h">Scan your food</h3>
+            <p data-i18n="s1_p">Open the camera, point at any meal or snack. Snap a photo, or pick from your gallery. Works with any cuisine.</p>
         </div>
-
-        <!-- Safety Alerts -->
-        <div class="bento-card b-narrow" data-gsap="card">
-            <div class="bento-icon" style="background:var(--warn-dim)">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="var(--warn)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="0.5" fill="var(--warn)"/></svg>
-            </div>
-            <h3 data-i18n="feat_alerts_title">Diabetes Safety Alerts</h3>
-            <p data-i18n="feat_alerts_desc">Instant warnings for foods that may spike glucose or pose risks for your specific diabetes type.</p>
-            <div class="alert-viz">
-                <div class="alert-item" style="background:rgba(0,224,184,0.04);color:var(--accent)">
-                    <span class="alert-dot" style="background:var(--accent)"></span>
-                    Grilled Chicken — Safe
-                </div>
-                <div class="alert-item" style="background:rgba(255,200,87,0.04);color:var(--gold)">
-                    <span class="alert-dot" style="background:var(--gold)"></span>
-                    White Rice — Caution
-                </div>
-                <div class="alert-item" style="background:rgba(255,107,107,0.04);color:var(--warn)">
-                    <span class="alert-dot" style="background:var(--warn)"></span>
-                    Soda 350ml — Dangerous
-                </div>
-            </div>
+        <div class="step" data-g="step">
+            <div class="step-n">02</div>
+            <h3 data-i18n="s2_h">Get instant analysis</h3>
+            <p data-i18n="s2_p">AI returns calories, all macros, glycemic index, and a safety rating for your diabetes type — in seconds.</p>
         </div>
-
-        <!-- Weekly Stats -->
-        <div class="bento-card b-third" data-gsap="card">
-            <div class="bento-icon" style="background:var(--accent-dim)">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 20V10M12 20V4M6 20v-6" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <h3 data-i18n="feat_stats_title">Weekly Statistics</h3>
-            <p data-i18n="feat_stats_desc">Interactive charts for calories and macros.</p>
-            <div class="chart-vis" id="chart-bars">
-                <div class="chart-bar" style="height:35%;background:rgba(0,224,184,0.2)"></div>
-                <div class="chart-bar" style="height:60%;background:rgba(0,224,184,0.3)"></div>
-                <div class="chart-bar" style="height:45%;background:rgba(0,224,184,0.25)"></div>
-                <div class="chart-bar" style="height:80%;background:rgba(0,224,184,0.45)"></div>
-                <div class="chart-bar" style="height:55%;background:rgba(0,224,184,0.3)"></div>
-                <div class="chart-bar" style="height:30%;background:rgba(0,224,184,0.18)"></div>
-                <div class="chart-bar" style="height:70%;background:linear-gradient(to top,rgba(0,224,184,0.25),rgba(0,224,184,0.5))"></div>
-            </div>
-        </div>
-
-        <!-- Auto Meal -->
-        <div class="bento-card b-third" data-gsap="card">
-            <div class="bento-icon" style="background:var(--gold-dim)">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--gold)" stroke-width="2"/><path d="M12 6v6l4 2" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <h3 data-i18n="feat_meal_title">Auto Meal Sorting</h3>
-            <p data-i18n="feat_meal_desc">Scanned food is auto-categorized into breakfast, lunch, dinner, or snack based on time of day.</p>
-        </div>
-
-        <!-- Macros -->
-        <div class="bento-card b-third" data-gsap="card">
-            <div class="bento-icon" style="background:var(--blue-dim)">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <h3 data-i18n="feat_macro_title">Full Macro Breakdown</h3>
-            <p data-i18n="feat_macro_desc">Every nutrient, at a glance.</p>
-            <div class="macro-pills">
-                <span class="macro-pill" style="color:var(--accent);background:var(--accent-dim);border-color:rgba(0,224,184,0.12)">Protein</span>
-                <span class="macro-pill" style="color:var(--gold);background:var(--gold-dim);border-color:rgba(255,200,87,0.12)">Carbs</span>
-                <span class="macro-pill" style="color:var(--warn);background:var(--warn-dim);border-color:rgba(255,107,107,0.12)">Fat</span>
-                <span class="macro-pill" style="color:#34d399;background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.12)">Fiber</span>
-                <span class="macro-pill" style="color:#f472b6;background:rgba(244,114,182,0.06);border-color:rgba(244,114,182,0.1)">Sugar</span>
-                <span class="macro-pill" style="color:var(--blue);background:var(--blue-dim);border-color:rgba(110,168,254,0.12)">GI</span>
-            </div>
-        </div>
-
-        <!-- Privacy -->
-        <div class="bento-card b-half" data-gsap="card">
-            <div class="bento-icon" style="background:rgba(244,114,182,0.06)">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <h3 data-i18n="feat_privacy_title">Privacy First</h3>
-            <p data-i18n="feat_privacy_desc">Encrypted storage on Supabase. Food photos are analyzed and discarded — never stored by AI services. We never sell or monetize your health data.</p>
-        </div>
-
-        <!-- Languages -->
-        <div class="bento-card b-half" data-gsap="card">
-            <div class="bento-icon" style="background:var(--blue-dim)">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--blue)" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="var(--blue)" stroke-width="2"/></svg>
-            </div>
-            <h3 data-i18n="feat_lang_title">Multilingual</h3>
-            <p data-i18n="feat_lang_desc">Full support for English, Russian, and Uzbek. Interface, AI analysis, and safety alerts — all in your language. Covering 7+ diabetes types with personalized guidance.</p>
+        <div class="step" data-g="step">
+            <div class="step-n">03</div>
+            <h3 data-i18n="s3_h">Track your progress</h3>
+            <p data-i18n="s3_p">View weekly charts, monitor trends, and stay on top of your daily goals. Organized by meal automatically.</p>
         </div>
     </div>
 </section>
 
-<!-- How it Works -->
-<section class="section" id="how">
-    <div class="section-center">
-        <div class="section-label" data-i18n="how_label">How it works</div>
-        <h2 class="section-heading" data-i18n="how_title">Three steps to<br><em>smarter eating</em></h2>
-        <p class="section-sub" data-i18n="how_sub">From camera to insight in under five seconds.</p>
+<!-- Features -->
+<section class="sec" id="features">
+    <div class="sec-c">
+        <div class="sec-label" data-i18n="f_label">Features</div>
+        <h2 class="sec-title" data-i18n="f_title">Intelligence meets<br><i>nutrition tracking</i></h2>
+        <p class="sec-desc" data-i18n="f_sub">Every feature designed to give you confidence in what you eat and peace of mind about your health.</p>
     </div>
-
-    <div class="steps">
-        <div class="step" data-gsap="step">
-            <div class="step-number">01</div>
-            <h3 data-i18n="step1_title">Scan your food</h3>
-            <p data-i18n="step1_desc">Open the camera, point at any meal or snack. Snap a photo, or pick from your gallery. Works with any cuisine.</p>
+    <div class="bento">
+        <div class="b-card b-7" data-g="card">
+            <div class="b-ico" style="background:var(--accent-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="var(--accent)" stroke-width="2"/></svg></div>
+            <h3 data-i18n="f1_h">AI Food Scanner</h3>
+            <p data-i18n="f1_p">Point your camera at any food — home-cooked, restaurant, or packaged. Our AI identifies what you're eating, estimates portions, and returns a full nutritional breakdown in seconds.</p>
+            <div class="scan-box"><div class="scan-cross"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div><div class="scan-beam"></div></div>
         </div>
-        <div class="step" data-gsap="step">
-            <div class="step-number">02</div>
-            <h3 data-i18n="step2_title">Get instant analysis</h3>
-            <p data-i18n="step2_desc">AI returns calories, all macros, glycemic index, and a safety rating for your diabetes type — in seconds.</p>
+        <div class="b-card b-5" data-g="card">
+            <div class="b-ico" style="background:var(--rose-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="0.5" fill="var(--rose)"/></svg></div>
+            <h3 data-i18n="f2_h">Diabetes Safety Alerts</h3>
+            <p data-i18n="f2_p">Instant warnings for foods that may spike glucose or pose risks for your specific diabetes type.</p>
+            <div class="alert-list">
+                <div class="alert-row" style="background:rgba(20,184,166,0.035);color:var(--accent)"><span class="alert-dot" style="background:var(--accent)"></span>Grilled Chicken — Safe</div>
+                <div class="alert-row" style="background:rgba(245,158,11,0.035);color:var(--amber)"><span class="alert-dot" style="background:var(--amber)"></span>White Rice — Caution</div>
+                <div class="alert-row" style="background:rgba(244,63,94,0.035);color:var(--rose)"><span class="alert-dot" style="background:var(--rose)"></span>Soda 350ml — Dangerous</div>
+            </div>
         </div>
-        <div class="step" data-gsap="step">
-            <div class="step-number">03</div>
-            <h3 data-i18n="step3_title">Track your progress</h3>
-            <p data-i18n="step3_desc">View weekly charts, monitor trends, and stay on top of your daily goals. Organized by meal automatically.</p>
+        <div class="b-card b-4" data-g="card">
+            <div class="b-ico" style="background:var(--accent-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 20V10M12 20V4M6 20v-6" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <h3 data-i18n="f3_h">Weekly Statistics</h3>
+            <p data-i18n="f3_p">Interactive charts for calories and macros.</p>
+            <div class="chart-bars" id="cbars">
+                <div class="chart-b" style="height:35%;background:rgba(20,184,166,0.18)"></div>
+                <div class="chart-b" style="height:60%;background:rgba(20,184,166,0.28)"></div>
+                <div class="chart-b" style="height:45%;background:rgba(20,184,166,0.22)"></div>
+                <div class="chart-b" style="height:82%;background:rgba(20,184,166,0.42)"></div>
+                <div class="chart-b" style="height:55%;background:rgba(20,184,166,0.28)"></div>
+                <div class="chart-b" style="height:30%;background:rgba(20,184,166,0.16)"></div>
+                <div class="chart-b" style="height:70%;background:linear-gradient(to top,rgba(20,184,166,0.22),rgba(20,184,166,0.45))"></div>
+            </div>
+        </div>
+        <div class="b-card b-4" data-g="card">
+            <div class="b-ico" style="background:var(--amber-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--amber)" stroke-width="2"/><path d="M12 6v6l4 2" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <h3 data-i18n="f4_h">Auto Meal Sorting</h3>
+            <p data-i18n="f4_p">Scanned food is auto-categorized into breakfast, lunch, dinner, or snack based on time of day.</p>
+        </div>
+        <div class="b-card b-4" data-g="card">
+            <div class="b-ico" style="background:var(--sky-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="var(--sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <h3 data-i18n="f5_h">Full Macro Breakdown</h3>
+            <p data-i18n="f5_p">Every nutrient, at a glance.</p>
+            <div class="m-pills">
+                <span class="m-pill" style="color:var(--accent);background:var(--accent-soft);border-color:rgba(20,184,166,0.12)">Protein</span>
+                <span class="m-pill" style="color:var(--amber);background:var(--amber-soft);border-color:rgba(245,158,11,0.12)">Carbs</span>
+                <span class="m-pill" style="color:var(--rose);background:var(--rose-soft);border-color:rgba(244,63,94,0.1)">Fat</span>
+                <span class="m-pill" style="color:var(--lime);background:var(--lime-soft);border-color:rgba(132,204,22,0.1)">Fiber</span>
+                <span class="m-pill" style="color:var(--pink);background:var(--pink-soft);border-color:rgba(236,72,153,0.1)">Sugar</span>
+                <span class="m-pill" style="color:var(--sky);background:var(--sky-soft);border-color:rgba(56,189,248,0.1)">GI</span>
+            </div>
+        </div>
+        <div class="b-card b-6" data-g="card">
+            <div class="b-ico" style="background:var(--pink-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="var(--pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="var(--pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <h3 data-i18n="f6_h">Privacy First</h3>
+            <p data-i18n="f6_p">Encrypted storage on Supabase. Food photos are analyzed and discarded — never stored by AI. We never sell your health data.</p>
+        </div>
+        <div class="b-card b-6" data-g="card">
+            <div class="b-ico" style="background:var(--sky-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--sky)" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="var(--sky)" stroke-width="2"/></svg></div>
+            <h3 data-i18n="f7_h">Multilingual</h3>
+            <p data-i18n="f7_p">Full support for English, Russian, and Uzbek. Interface, AI analysis, and safety alerts — all in your language. 7+ diabetes types supported.</p>
         </div>
     </div>
 </section>
 
 <!-- Stats -->
-<div class="stats-divider" id="stats">
-    <div class="stats-inner">
-        <div class="stat">
-            <div class="stat-num" style="color:var(--accent)" data-count="3">0</div>
-            <div class="stat-text" data-i18n="stat_lang">Languages</div>
-        </div>
-        <div class="stat">
-            <div class="stat-num" style="color:var(--gold)" data-count="7" data-suffix="+">0</div>
-            <div class="stat-text" data-i18n="stat_types">Diabetes Types</div>
-        </div>
-        <div class="stat">
-            <div class="stat-num" style="color:var(--blue)" data-count="6" data-suffix="">0</div>
-            <div class="stat-text" data-i18n="stat_macros">Macro Nutrients</div>
-        </div>
-        <div class="stat">
-            <div class="stat-num" style="color:var(--warn)" data-count="5" data-suffix="s">0</div>
-            <div class="stat-text" data-i18n="stat_speed">Scan Speed</div>
-        </div>
+<div class="stats-wrap" id="stats">
+    <div class="stats-grid">
+        <div class="stat-cell"><div class="stat-n" style="color:var(--accent)" data-count="3">0</div><div class="stat-t" data-i18n="st1">Languages</div></div>
+        <div class="stat-cell"><div class="stat-n" style="color:var(--amber)" data-count="7" data-suf="+">0</div><div class="stat-t" data-i18n="st2">Diabetes Types</div></div>
+        <div class="stat-cell"><div class="stat-n" style="color:var(--sky)" data-count="6">0</div><div class="stat-t" data-i18n="st3">Macro Nutrients</div></div>
+        <div class="stat-cell"><div class="stat-n" style="color:var(--rose)" data-count="5" data-suf="s">0</div><div class="stat-t" data-i18n="st4">Scan Speed</div></div>
     </div>
 </div>
 
 <!-- CTA -->
 <section class="cta">
-    <div class="cta-glow" id="cta-glow"></div>
-    <div class="section-label" data-i18n="cta_label">Get started</div>
-    <h2 class="section-heading" data-i18n="cta_title" style="margin-bottom:16px">Take control of<br><em>what you eat</em></h2>
-    <p class="section-sub" data-i18n="cta_sub">Free to download. Your smarter health journey starts now.</p>
-    <a href="#" class="btn-primary">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        <span data-i18n="hero_download">Download for iOS</span>
+    <div class="cta-glow" id="ctaglow"></div>
+    <div class="sec-label" data-i18n="cta_label">Get started</div>
+    <h2 class="sec-title" data-i18n="cta_title" style="margin-bottom:14px">Take control of<br><i>what you eat</i></h2>
+    <p class="sec-desc" data-i18n="cta_sub">Free to download. Your smarter health journey starts now.</p>
+    <a href="#" class="btn-fill">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <span data-i18n="hero_dl">Download for iOS</span>
     </a>
 </section>
 
-<!-- Footer -->
 <footer class="footer">
     <div class="footer-top">
         <div>
             <div class="footer-brand">
-                <div class="footer-brand-mark" style="border-radius:8px;overflow:hidden">
-                    <img src="icon.png" alt="DiaBuddy" width="28" height="28" style="display:block">
-                </div>
+                <div class="footer-brand-ico"><img src="icon.png" alt="DiaBuddy"></div>
                 DiaBuddy
             </div>
-            <p class="footer-tagline" data-i18n="footer_tagline">AI nutrition tracking for people with diabetes. Scan, understand, eat better.</p>
+            <p class="footer-tagline" data-i18n="ft_tag">AI nutrition tracking for people with diabetes. Scan, understand, eat better.</p>
         </div>
         <div class="footer-cols">
             <div class="footer-col">
-                <h4 data-i18n="footer_product">Product</h4>
+                <h4 data-i18n="ft_product">Product</h4>
                 <a href="#features" data-i18n="nav_features">Features</a>
                 <a href="#how" data-i18n="nav_how">How it works</a>
-                <a href="#" data-i18n="footer_download">Download</a>
+                <a href="#" data-i18n="ft_dl">Download</a>
             </div>
             <div class="footer-col">
-                <h4 data-i18n="footer_legal">Legal</h4>
-                <a href="privacy.html" data-i18n="footer_privacy">Privacy Policy</a>
+                <h4 data-i18n="ft_legal">Legal</h4>
+                <a href="privacy.html" data-i18n="ft_priv">Privacy Policy</a>
                 <a href="support.html" data-i18n="nav_support">Support</a>
-                <a href="mailto:dia.buddy2026@mail.ru" data-i18n="footer_contact">Contact</a>
+                <a href="mailto:dia.buddy2026@mail.ru" data-i18n="ft_contact">Contact</a>
             </div>
         </div>
     </div>
-    <div class="footer-bottom">
+    <div class="footer-bot">
         <p>&copy; 2026 DiaBuddy. All rights reserved.</p>
-        <p>Made for the diabetes community.</p>
+        <p data-i18n="ft_made">Made for the diabetes community.</p>
     </div>
 </footer>
 
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-// ===== HERO ENTRANCE =====
-const heroTl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.2 }});
-heroTl
-    .to("#hero-glow", { opacity: 1, duration: 2 }, 0)
-    .to(".hero-pill", { opacity: 1, y: 0, duration: 0.8 }, 0.2)
-    .fromTo(".hero h1", { opacity: 0, y: 60 }, { opacity: 1, y: 0 }, 0.35)
-    .fromTo(".hero-desc", { opacity: 0, y: 40 }, { opacity: 1, y: 0 }, 0.5)
-    .fromTo(".hero-actions", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, 0.65)
-    .fromTo(".hero-phone", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.5 }, 0.7);
+/* ===== HERO TIMELINE ===== */
+const ht = gsap.timeline({ defaults:{ ease:"expo.out", duration:1.2 }});
+ht .to("#hglow",{ opacity:1, duration:2 },0)
+   .to(".hero-pill",{ opacity:1, y:0, duration:0.8 },0.15)
+   .fromTo(".hero h1",{opacity:0,y:50},{opacity:1,y:0},0.3)
+   .fromTo(".hero-sub",{opacity:0,y:35},{opacity:1,y:0},0.45)
+   .fromTo(".hero-btns",{opacity:0,y:25},{opacity:1,y:0},0.6)
+   .fromTo(".hero-device",{opacity:0,y:70},{opacity:1,y:0,duration:1.5},0.65);
 
-// Animate phone progress bar
-setTimeout(() => {
-    document.getElementById("phone-bar").style.width = "59%";
-}, 1500);
+setTimeout(()=>{ document.getElementById("dbar").style.width="59%"; },1400);
 
-// ===== NAV SCROLL =====
-ScrollTrigger.create({
-    start: "top -80",
-    onUpdate: (self) => {
-        document.getElementById("nav").classList.toggle("scrolled", self.progress > 0);
-    }
+/* ===== NAV MORPH ===== */
+ScrollTrigger.create({ start:"top -60", onUpdate:s=>document.getElementById("nav").classList.toggle("is-scrolled",s.progress>0) });
+
+/* ===== TRUST ===== */
+gsap.to("#trust",{ scrollTrigger:{trigger:"#trust",start:"top 85%"}, opacity:1, duration:1, ease:"expo.out" });
+
+/* ===== CARDS + STEPS ===== */
+gsap.utils.toArray('[data-g="card"],[data-g="step"]').forEach(el=>{
+    gsap.fromTo(el,{opacity:0,y:45},{opacity:1,y:0,duration:1,ease:"expo.out",scrollTrigger:{trigger:el,start:"top 88%"}});
 });
 
-// ===== TRUST BAR =====
-gsap.to("#trust", {
-    scrollTrigger: { trigger: "#trust", start: "top 85%" },
-    opacity: 1, y: 0, duration: 1, ease: "expo.out"
+/* ===== CHART BARS ===== */
+ScrollTrigger.create({ trigger:"#cbars", start:"top 85%", once:true,
+    onEnter:()=>gsap.to("#cbars .chart-b",{scaleY:1,duration:0.75,ease:"expo.out",stagger:0.07})
 });
 
-// ===== BENTO CARDS — staggered reveal =====
-gsap.utils.toArray('[data-gsap="card"]').forEach((card, i) => {
-    gsap.fromTo(card,
-        { opacity: 0, y: 50 },
-        {
-            opacity: 1, y: 0,
-            duration: 1,
-            ease: "expo.out",
-            scrollTrigger: {
-                trigger: card,
-                start: "top 88%",
-            }
-        }
-    );
-});
-
-// ===== CHART BARS =====
-ScrollTrigger.create({
-    trigger: "#chart-bars",
-    start: "top 85%",
-    onEnter: () => {
-        gsap.to("#chart-bars .chart-bar", {
-            scaleY: 1,
-            duration: 0.8,
-            ease: "expo.out",
-            stagger: 0.08
-        });
-    },
-    once: true
-});
-
-// ===== STEPS =====
-gsap.utils.toArray('[data-gsap="step"]').forEach((step, i) => {
-    gsap.fromTo(step,
-        { opacity: 0, y: 40, scale: 0.97 },
-        {
-            opacity: 1, y: 0, scale: 1,
-            duration: 0.9,
-            ease: "expo.out",
-            delay: i * 0.1,
-            scrollTrigger: {
-                trigger: step,
-                start: "top 88%",
-            }
-        }
-    );
-});
-
-// ===== STAT COUNTERS =====
-ScrollTrigger.create({
-    trigger: "#stats",
-    start: "top 80%",
-    onEnter: () => {
-        document.querySelectorAll(".stat-num[data-count]").forEach(el => {
-            const target = parseInt(el.dataset.count);
-            const suffix = el.dataset.suffix || "";
-            gsap.fromTo(el, { innerText: 0 }, {
-                innerText: target,
-                duration: 1.5,
-                ease: "expo.out",
-                snap: { innerText: 1 },
-                onUpdate: function() {
-                    el.textContent = Math.round(gsap.getProperty(el, "innerText")) + suffix;
-                }
+/* ===== STAT COUNTERS ===== */
+ScrollTrigger.create({ trigger:"#stats", start:"top 80%", once:true,
+    onEnter:()=>{
+        document.querySelectorAll(".stat-n[data-count]").forEach(el=>{
+            const t=+el.dataset.count, s=el.dataset.suf||"";
+            gsap.fromTo(el,{innerText:0},{innerText:t,duration:1.4,ease:"expo.out",snap:{innerText:1},
+                onUpdate(){ el.textContent=Math.round(gsap.getProperty(el,"innerText"))+s; }
             });
         });
-    },
-    once: true
-});
-
-// ===== CTA GLOW =====
-gsap.to("#cta-glow", {
-    scrollTrigger: { trigger: ".cta", start: "top 60%" },
-    opacity: 1, duration: 2, ease: "power2.out"
-});
-
-// ===== PARALLAX HERO GLOW =====
-gsap.to("#hero-glow", {
-    scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: 1
-    },
-    y: -150,
-    opacity: 0.3
-});
-
-// ===== CARD MOUSE GLOW EFFECT =====
-document.querySelectorAll(".bento-card").forEach(card => {
-    card.addEventListener("mousemove", (e) => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty("--mouse-x", (e.clientX - rect.left) + "px");
-        card.style.setProperty("--mouse-y", (e.clientY - rect.top) + "px");
-    });
-});
-
-// ===== SECTION HEADERS =====
-gsap.utils.toArray(".section-label, .section-heading, .section-sub").forEach(el => {
-    gsap.fromTo(el,
-        { opacity: 0, y: 30 },
-        {
-            opacity: 1, y: 0,
-            duration: 0.9,
-            ease: "expo.out",
-            scrollTrigger: {
-                trigger: el,
-                start: "top 88%"
-            }
-        }
-    );
-});
-
-// ===== CTA SECTION =====
-gsap.utils.toArray(".cta .section-label, .cta .section-heading, .cta .section-sub, .cta .btn-primary").forEach((el, i) => {
-    gsap.fromTo(el,
-        { opacity: 0, y: 30 },
-        {
-            opacity: 1, y: 0,
-            duration: 0.9,
-            delay: i * 0.08,
-            ease: "expo.out",
-            scrollTrigger: {
-                trigger: ".cta",
-                start: "top 70%"
-            }
-        }
-    );
-});
-
-// ===== SMOOTH SCROLL FOR NAV LINKS =====
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener("click", (e) => {
-        const target = document.querySelector(a.getAttribute("href"));
-        if (target) {
-            e.preventDefault();
-            gsap.to(window, { scrollTo: { y: target, offsetY: 80 }, duration: 1, ease: "expo.inOut" });
-        }
-    });
-});
-
-// ===== i18n TRANSLATIONS =====
-const translations = {
-    en: {
-        nav_features: "Features", nav_how: "How it works", nav_support: "Support", nav_cta: "Get the App",
-        hero_badge: "Now available on the App Store",
-        hero_title: 'Scan your food,<br><em>know your numbers.</em>',
-        hero_desc: "The AI nutrition companion purpose-built for diabetes. Point your camera at any meal, get instant macro analysis, safety alerts, and glycemic ratings.",
-        hero_download: "Download for iOS", hero_explore: "Explore features",
-        trust_label: "Built with",
-        feat_label: "Features", feat_title: 'Intelligence meets<br><em>nutrition tracking</em>',
-        feat_sub: "Every feature designed to give you confidence in what you eat and peace of mind about your health.",
-        feat_scanner_title: "AI Food Scanner", feat_scanner_desc: "Point your camera at any food — a home-cooked meal, restaurant dish, or packaged snack. Our AI identifies what you're eating, estimates portions, and returns a full nutritional breakdown in seconds.",
-        feat_alerts_title: "Diabetes Safety Alerts", feat_alerts_desc: "Instant warnings for foods that may spike glucose or pose risks for your specific diabetes type.",
-        feat_stats_title: "Weekly Statistics", feat_stats_desc: "Interactive charts for calories and macros.",
-        feat_meal_title: "Auto Meal Sorting", feat_meal_desc: "Scanned food is auto-categorized into breakfast, lunch, dinner, or snack based on time of day.",
-        feat_macro_title: "Full Macro Breakdown", feat_macro_desc: "Every nutrient, at a glance.",
-        feat_privacy_title: "Privacy First", feat_privacy_desc: "Encrypted storage on Supabase. Food photos are analyzed and discarded — never stored by AI services. We never sell or monetize your health data.",
-        feat_lang_title: "Multilingual", feat_lang_desc: "Full support for English, Russian, and Uzbek. Interface, AI analysis, and safety alerts — all in your language. Covering 7+ diabetes types with personalized guidance.",
-        how_label: "How it works", how_title: 'Three steps to<br><em>smarter eating</em>', how_sub: "From camera to insight in under five seconds.",
-        step1_title: "Scan your food", step1_desc: "Open the camera, point at any meal or snack. Snap a photo, or pick from your gallery. Works with any cuisine.",
-        step2_title: "Get instant analysis", step2_desc: "AI returns calories, all macros, glycemic index, and a safety rating for your diabetes type — in seconds.",
-        step3_title: "Track your progress", step3_desc: "View weekly charts, monitor trends, and stay on top of your daily goals. Organized by meal automatically.",
-        stat_lang: "Languages", stat_types: "Diabetes Types", stat_macros: "Macro Nutrients", stat_speed: "Scan Speed",
-        cta_label: "Get started", cta_title: 'Take control of<br><em>what you eat</em>', cta_sub: "Free to download. Your smarter health journey starts now.",
-        footer_tagline: "AI nutrition tracking for people with diabetes. Scan, understand, eat better.",
-        footer_product: "Product", footer_legal: "Legal", footer_download: "Download", footer_privacy: "Privacy Policy", footer_contact: "Contact"
-    },
-    ru: {
-        nav_features: "Функции", nav_how: "Как работает", nav_support: "Поддержка", nav_cta: "Скачать",
-        hero_badge: "Уже в App Store",
-        hero_title: 'Сканируй еду,<br><em>знай свои числа.</em>',
-        hero_desc: "AI-помощник по питанию, созданный для диабета. Наведите камеру на любое блюдо — получите анализ макронутриентов, предупреждения и гликемический индекс.",
-        hero_download: "Скачать для iOS", hero_explore: "Узнать больше",
-        trust_label: "Создано с помощью",
-        feat_label: "Функции", feat_title: 'Интеллект встречает<br><em>трекинг питания</em>',
-        feat_sub: "Каждая функция создана, чтобы вы были уверены в том, что едите, и спокойны за своё здоровье.",
-        feat_scanner_title: "AI Сканер еды", feat_scanner_desc: "Наведите камеру на любую еду — домашнее блюдо, ресторанное или упакованное. Наш AI определит, что вы едите, оценит порцию и выдаст полный нутриентный анализ за секунды.",
-        feat_alerts_title: "Предупреждения для диабета", feat_alerts_desc: "Мгновенные предупреждения о продуктах, которые могут повысить глюкозу или создать риск для вашего типа диабета.",
-        feat_stats_title: "Недельная статистика", feat_stats_desc: "Интерактивные графики калорий и макронутриентов.",
-        feat_meal_title: "Авто-сортировка приёмов пищи", feat_meal_desc: "Отсканированная еда автоматически распределяется по завтраку, обеду, ужину или перекусу по времени суток.",
-        feat_macro_title: "Полный анализ макросов", feat_macro_desc: "Все нутриенты на одном экране.",
-        feat_privacy_title: "Приватность прежде всего", feat_privacy_desc: "Зашифрованное хранение в Supabase. Фото еды анализируются и удаляются — AI-сервисы их не сохраняют. Мы никогда не продаём ваши данные.",
-        feat_lang_title: "Мультиязычность", feat_lang_desc: "Полная поддержка английского, русского и узбекского. Интерфейс, AI-анализ и предупреждения — всё на вашем языке. Поддержка 7+ типов диабета.",
-        how_label: "Как работает", how_title: 'Три шага к<br><em>умному питанию</em>', how_sub: "От камеры до результата за пять секунд.",
-        step1_title: "Сканируйте еду", step1_desc: "Откройте камеру, наведите на любое блюдо. Сделайте фото или выберите из галереи. Работает с любой кухней.",
-        step2_title: "Мгновенный анализ", step2_desc: "AI выдаёт калории, все макросы, гликемический индекс и оценку безопасности для вашего типа диабета — за секунды.",
-        step3_title: "Отслеживайте прогресс", step3_desc: "Смотрите недельные графики, следите за трендами и контролируйте дневные цели. Всё организовано по приёмам пищи автоматически.",
-        stat_lang: "Языков", stat_types: "Типов диабета", stat_macros: "Макронутриентов", stat_speed: "Скорость скана",
-        cta_label: "Начните сейчас", cta_title: 'Возьмите под контроль<br><em>своё питание</em>', cta_sub: "Бесплатно для скачивания. Ваш путь к здоровью начинается сейчас.",
-        footer_tagline: "AI-трекинг питания для людей с диабетом. Сканируй, понимай, ешь лучше.",
-        footer_product: "Продукт", footer_legal: "Правовая информация", footer_download: "Скачать", footer_privacy: "Политика конфиденциальности", footer_contact: "Контакты"
-    },
-    uz: {
-        nav_features: "Funksiyalar", nav_how: "Qanday ishlaydi", nav_support: "Yordam", nav_cta: "Yuklab olish",
-        hero_badge: "App Store'da mavjud",
-        hero_title: 'Ovqatni skanerlang,<br><em>raqamlaringizni biling.</em>',
-        hero_desc: "Diabet uchun yaratilgan AI ovqatlanish yordamchisi. Kamerani istalgan taomga yo'naltiring — makro tahlil, xavfsizlik ogohlantirishlari va glikemik indeksni oling.",
-        hero_download: "iOS uchun yuklab olish", hero_explore: "Batafsil",
-        trust_label: "Yaratilgan texnologiyalar",
-        feat_label: "Funksiyalar", feat_title: 'Intellekt<br><em>ovqatlanish trekingiga</em> javob beradi',
-        feat_sub: "Har bir funksiya sizga ovqatlanishingizga ishonch va sog'lig'ingiz haqida xotirjamlik berish uchun yaratilgan.",
-        feat_scanner_title: "AI Ovqat Skaneri", feat_scanner_desc: "Kamerani istalgan ovqatga yo'naltiring — uy taomi, restoran taomi yoki tayyor mahsulot. AI nima yeyayotganingizni aniqlaydi, porsiyani baholaydi va to'liq ozuqa tahlilini soniyalarda beradi.",
-        feat_alerts_title: "Diabet Xavfsizlik Ogohlantirishlari", feat_alerts_desc: "Glyukozani oshirishi yoki diabet turingiz uchun xavf tug'dirishi mumkin bo'lgan mahsulotlar haqida tezkor ogohlantirishlar.",
-        feat_stats_title: "Haftalik Statistika", feat_stats_desc: "Kaloriya va makronutrientlar uchun interaktiv grafiklar.",
-        feat_meal_title: "Avtomatik Ovqat Tartibi", feat_meal_desc: "Skanerlangan ovqat kun vaqtiga qarab nonushta, tushlik, kechki ovqat yoki gazak sifatida avtomatik tartiblanadi.",
-        feat_macro_title: "To'liq Makro Tahlil", feat_macro_desc: "Barcha ozuqa moddalari bir qarashda.",
-        feat_privacy_title: "Maxfiylik birinchi o'rinda", feat_privacy_desc: "Supabase'da shifrlangan saqlash. Ovqat suratlari tahlil qilinadi va o'chiriladi — AI xizmatlari ularni saqlamaydi. Biz hech qachon ma'lumotlaringizni sotmaymiz.",
-        feat_lang_title: "Ko'p tilli", feat_lang_desc: "Ingliz, rus va o'zbek tillarini to'liq qo'llab-quvvatlash. Interfeys, AI tahlil va ogohlantirishlar — barchasi sizning tilingizda. 7+ diabet turini qo'llab-quvvatlash.",
-        how_label: "Qanday ishlaydi", how_title: "Aqlli ovqatlanishga<br><em>uch qadam</em>", how_sub: "Kameradan natijagacha besh soniyada.",
-        step1_title: "Ovqatni skanerlang", step1_desc: "Kamerani oching, istalgan taomga yo'naltiring. Surat oling yoki galereyadan tanlang. Istalgan oshxona bilan ishlaydi.",
-        step2_title: "Tezkor tahlil oling", step2_desc: "AI kaloriya, barcha makroslar, glikemik indeks va diabet turingiz uchun xavfsizlik baholashini — soniyalarda beradi.",
-        step3_title: "Progressni kuzating", step3_desc: "Haftalik grafiklarni ko'ring, tendensiyalarni kuzating va kunlik maqsadlaringizni nazorat qiling. Avtomatik ovqat tartibida.",
-        stat_lang: "Tillar", stat_types: "Diabet turlari", stat_macros: "Makronutrientlar", stat_speed: "Skanerlash tezligi",
-        cta_label: "Boshlang", cta_title: "Ovqatlanishingizni<br><em>nazorat qiling</em>", cta_sub: "Bepul yuklab olish. Sog'lom hayot yo'lingiz hozir boshlanadi.",
-        footer_tagline: "Diabetli odamlar uchun AI ovqatlanish trekeri. Skanerlang, tushuning, yaxshiroq ovqatlaning.",
-        footer_product: "Mahsulot", footer_legal: "Huquqiy", footer_download: "Yuklab olish", footer_privacy: "Maxfiylik siyosati", footer_contact: "Aloqa"
     }
+});
+
+/* ===== CTA GLOW ===== */
+gsap.to("#ctaglow",{ scrollTrigger:{trigger:".cta",start:"top 60%"}, opacity:1, duration:2, ease:"power2.out" });
+
+/* ===== PARALLAX ===== */
+gsap.to("#hglow",{ scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:1}, y:-120, opacity:0.3 });
+
+/* ===== SECTION HEADERS ===== */
+gsap.utils.toArray(".sec-label,.sec-title,.sec-desc").forEach(el=>{
+    gsap.fromTo(el,{opacity:0,y:28},{opacity:1,y:0,duration:0.85,ease:"expo.out",scrollTrigger:{trigger:el,start:"top 88%"}});
+});
+
+/* ===== CTA ELEMENTS ===== */
+gsap.utils.toArray(".cta .sec-label,.cta .sec-title,.cta .sec-desc,.cta .btn-fill").forEach((el,i)=>{
+    gsap.fromTo(el,{opacity:0,y:28},{opacity:1,y:0,duration:0.85,delay:i*0.07,ease:"expo.out",scrollTrigger:{trigger:".cta",start:"top 70%"}});
+});
+
+/* ===== MOUSE GLOW ===== */
+document.querySelectorAll(".b-card").forEach(c=>{
+    c.addEventListener("mousemove",e=>{
+        const r=c.getBoundingClientRect();
+        c.style.setProperty("--mx",(e.clientX-r.left)+"px");
+        c.style.setProperty("--my",(e.clientY-r.top)+"px");
+    });
+});
+
+/* ===== SMOOTH SCROLL ===== */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener("click",e=>{
+        const t=document.querySelector(a.getAttribute("href"));
+        if(t){ e.preventDefault(); gsap.to(window,{scrollTo:{y:t,offsetY:80},duration:1,ease:"expo.inOut"}); }
+    });
+});
+
+/* ============================================
+   ===== i18n TRANSLATION SYSTEM =====
+   ============================================ */
+const T={
+en:{
+nav_features:"Features",nav_how:"How it works",nav_support:"Support",nav_cta:"Get the App",
+hero_badge:"Now available on the App Store",
+hero_h1:'Scan your food,<br><i>know your numbers.</i>',
+hero_sub:"The AI nutrition companion purpose-built for diabetes. Point your camera at any meal, get instant macro analysis, safety alerts, and glycemic ratings.",
+hero_dl:"Download for iOS",hero_explore:"Explore features",
+trust_label:"Built with",
+how_label:"How it works",how_title:'Three steps to<br><i>smarter eating</i>',how_sub:"From camera to insight in under five seconds.",
+s1_h:"Scan your food",s1_p:"Open the camera, point at any meal or snack. Snap a photo, or pick from your gallery. Works with any cuisine.",
+s2_h:"Get instant analysis",s2_p:"AI returns calories, all macros, glycemic index, and a safety rating for your diabetes type — in seconds.",
+s3_h:"Track your progress",s3_p:"View weekly charts, monitor trends, and stay on top of your daily goals. Organized by meal automatically.",
+f_label:"Features",f_title:'Intelligence meets<br><i>nutrition tracking</i>',f_sub:"Every feature designed to give you confidence in what you eat and peace of mind about your health.",
+f1_h:"AI Food Scanner",f1_p:"Point your camera at any food — home-cooked, restaurant, or packaged. Our AI identifies what you're eating, estimates portions, and returns a full nutritional breakdown in seconds.",
+f2_h:"Diabetes Safety Alerts",f2_p:"Instant warnings for foods that may spike glucose or pose risks for your specific diabetes type.",
+f3_h:"Weekly Statistics",f3_p:"Interactive charts for calories and macros.",
+f4_h:"Auto Meal Sorting",f4_p:"Scanned food is auto-categorized into breakfast, lunch, dinner, or snack based on time of day.",
+f5_h:"Full Macro Breakdown",f5_p:"Every nutrient, at a glance.",
+f6_h:"Privacy First",f6_p:"Encrypted storage on Supabase. Food photos are analyzed and discarded — never stored by AI. We never sell your health data.",
+f7_h:"Multilingual",f7_p:"Full support for English, Russian, and Uzbek. Interface, AI analysis, and safety alerts — all in your language. 7+ diabetes types supported.",
+st1:"Languages",st2:"Diabetes Types",st3:"Macro Nutrients",st4:"Scan Speed",
+cta_label:"Get started",cta_title:'Take control of<br><i>what you eat</i>',cta_sub:"Free to download. Your smarter health journey starts now.",
+ft_tag:"AI nutrition tracking for people with diabetes. Scan, understand, eat better.",
+ft_product:"Product",ft_legal:"Legal",ft_dl:"Download",ft_priv:"Privacy Policy",ft_contact:"Contact",ft_made:"Made for the diabetes community."
+},
+ru:{
+nav_features:"Функции",nav_how:"Как работает",nav_support:"Поддержка",nav_cta:"Скачать",
+hero_badge:"Уже в App Store",
+hero_h1:'Сканируй еду,<br><i>знай свои числа.</i>',
+hero_sub:"AI-помощник по питанию для диабета. Наведите камеру на любое блюдо — получите макро-анализ, предупреждения и гликемический индекс.",
+hero_dl:"Скачать для iOS",hero_explore:"Узнать больше",
+trust_label:"Создано с помощью",
+how_label:"Как работает",how_title:'Три шага к<br><i>умному питанию</i>',how_sub:"От камеры до результата за пять секунд.",
+s1_h:"Сканируйте еду",s1_p:"Откройте камеру, наведите на блюдо. Сделайте фото или выберите из галереи. Любая кухня мира.",
+s2_h:"Мгновенный анализ",s2_p:"AI выдаёт калории, все макросы, гликемический индекс и оценку безопасности для вашего типа диабета.",
+s3_h:"Отслеживайте прогресс",s3_p:"Недельные графики, тренды и контроль дневных целей. Всё организовано по приёмам пищи автоматически.",
+f_label:"Функции",f_title:'Интеллект встречает<br><i>трекинг питания</i>',f_sub:"Каждая функция создана, чтобы вы были уверены в том, что едите.",
+f1_h:"AI Сканер еды",f1_p:"Наведите камеру на любую еду — домашнюю, ресторанную или упакованную. AI определит блюдо, оценит порцию и выдаст полный анализ за секунды.",
+f2_h:"Предупреждения для диабета",f2_p:"Мгновенные предупреждения о продуктах, которые могут повысить глюкозу или создать риск.",
+f3_h:"Недельная статистика",f3_p:"Интерактивные графики калорий и макросов.",
+f4_h:"Авто-сортировка приёмов пищи",f4_p:"Еда автоматически распределяется по завтраку, обеду, ужину или перекусу.",
+f5_h:"Полный анализ макросов",f5_p:"Все нутриенты на одном экране.",
+f6_h:"Приватность прежде всего",f6_p:"Зашифрованное хранение в Supabase. Фото анализируются и удаляются. Мы никогда не продаём ваши данные.",
+f7_h:"Мультиязычность",f7_p:"Поддержка английского, русского и узбекского. Интерфейс, AI-анализ и предупреждения — на вашем языке. 7+ типов диабета.",
+st1:"Языков",st2:"Типов диабета",st3:"Макронутриентов",st4:"Скорость скана",
+cta_label:"Начните сейчас",cta_title:'Возьмите под контроль<br><i>своё питание</i>',cta_sub:"Бесплатно. Ваш путь к здоровью начинается сейчас.",
+ft_tag:"AI-трекинг питания для людей с диабетом. Сканируй, понимай, ешь лучше.",
+ft_product:"Продукт",ft_legal:"Правовая информация",ft_dl:"Скачать",ft_priv:"Политика конфиденциальности",ft_contact:"Контакты",ft_made:"Создано для диабетического сообщества."
+},
+uz:{
+nav_features:"Funksiyalar",nav_how:"Qanday ishlaydi",nav_support:"Yordam",nav_cta:"Yuklab olish",
+hero_badge:"App Store'da mavjud",
+hero_h1:'Ovqatni skanerlang,<br><i>raqamlaringizni biling.</i>',
+hero_sub:"Diabet uchun AI ovqatlanish yordamchisi. Kamerani taomga yo'naltiring — makro tahlil, ogohlantirishlar va glikemik indeksni oling.",
+hero_dl:"iOS uchun yuklab olish",hero_explore:"Batafsil",
+trust_label:"Yaratilgan texnologiyalar",
+how_label:"Qanday ishlaydi",how_title:'Aqlli ovqatlanishga<br><i>uch qadam</i>',how_sub:"Kameradan natijagacha besh soniyada.",
+s1_h:"Ovqatni skanerlang",s1_p:"Kamerani oching, taomga yo'naltiring. Surat oling yoki galereyadan tanlang.",
+s2_h:"Tezkor tahlil oling",s2_p:"AI kaloriya, barcha makroslar, glikemik indeks va xavfsizlik baholashini soniyalarda beradi.",
+s3_h:"Progressni kuzating",s3_p:"Haftalik grafiklarni ko'ring, tendensiyalarni kuzating. Avtomatik ovqat tartibida.",
+f_label:"Funksiyalar",f_title:'Intellekt<br><i>ovqatlanish trekingiga</i> javob beradi',f_sub:"Har bir funksiya sizga ovqatlanishingizga ishonch berish uchun yaratilgan.",
+f1_h:"AI Ovqat Skaneri",f1_p:"Kamerani istalgan ovqatga yo'naltiring. AI nima yeyayotganingizni aniqlaydi va to'liq tahlilni soniyalarda beradi.",
+f2_h:"Diabet Xavfsizlik Ogohlantirishlari",f2_p:"Glyukozani oshirishi mumkin bo'lgan mahsulotlar haqida tezkor ogohlantirishlar.",
+f3_h:"Haftalik Statistika",f3_p:"Kaloriya va makronutrientlar uchun interaktiv grafiklar.",
+f4_h:"Avtomatik Ovqat Tartibi",f4_p:"Skanerlangan ovqat kun vaqtiga qarab avtomatik tartiblanadi.",
+f5_h:"To'liq Makro Tahlil",f5_p:"Barcha ozuqa moddalari bir qarashda.",
+f6_h:"Maxfiylik birinchi o'rinda",f6_p:"Supabase'da shifrlangan saqlash. Ovqat suratlari tahlil qilinadi va o'chiriladi. Biz ma'lumotlaringizni sotmaymiz.",
+f7_h:"Ko'p tilli",f7_p:"Ingliz, rus va o'zbek tillarini to'liq qo'llab-quvvatlash. 7+ diabet turini qo'llab-quvvatlash.",
+st1:"Tillar",st2:"Diabet turlari",st3:"Makronutrientlar",st4:"Skanerlash tezligi",
+cta_label:"Boshlang",cta_title:"Ovqatlanishingizni<br><i>nazorat qiling</i>",cta_sub:"Bepul yuklab olish. Sog'lom hayot yo'lingiz hozir boshlanadi.",
+ft_tag:"Diabetli odamlar uchun AI ovqatlanish trekeri.",
+ft_product:"Mahsulot",ft_legal:"Huquqiy",ft_dl:"Yuklab olish",ft_priv:"Maxfiylik siyosati",ft_contact:"Aloqa",ft_made:"Diabet hamjamiyati uchun yaratilgan."
+}
 };
 
-function setLang(lang) {
-    localStorage.setItem("diabuddy-lang", lang);
-    document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
-    document.documentElement.lang = lang === "uz" ? "uz" : lang === "ru" ? "ru" : "en";
-    const t = translations[lang] || translations.en;
-    document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.dataset.i18n;
-        if (t[key]) el.innerHTML = t[key];
-    });
+function setLang(l){
+    localStorage.setItem("db-lang",l);
+    document.querySelectorAll(".lang-b").forEach(b=>b.classList.toggle("on",b.dataset.lang===l));
+    document.documentElement.lang=l;
+    const t=T[l]||T.en;
+    document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.dataset.i18n; if(t[k]) el.innerHTML=t[k]; });
 }
-
-document.querySelectorAll(".lang-btn").forEach(btn => {
-    btn.addEventListener("click", () => setLang(btn.dataset.lang));
-});
-
-// Init language from localStorage or browser
-const savedLang = localStorage.getItem("diabuddy-lang");
-if (savedLang && translations[savedLang]) {
-    setLang(savedLang);
-}
+document.querySelectorAll(".lang-b").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+const sl=localStorage.getItem("db-lang"); if(sl&&T[sl]) setLang(sl);
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
 </body>
 </html>

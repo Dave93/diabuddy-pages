@@ -6,109 +6,272 @@
     <title>DiaBuddy — Privacy Policy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
-            --bg: #050505; --bg-card: rgba(255,255,255,0.03);
-            --border: rgba(255,255,255,0.06); --border-hover: rgba(255,255,255,0.12);
-            --text: #fafafa; --text-dim: #999; --text-muted: #666;
-            --accent: #00e0b8; --accent-dim: rgba(0,224,184,0.08);
-            --serif: 'Instrument Serif', Georgia, serif;
-            --sans: 'Geist', -apple-system, sans-serif;
+            --bg: #0A0A0C;
+            --bg-raised: #111114;
+            --bg-card: rgba(255,255,255,0.022);
+            --border: rgba(255,255,255,0.055);
+            --border-hover: rgba(255,255,255,0.11);
+            --text: #EDEEF0;
+            --text-dim: #9CA3AF;
+            --text-muted: #5C6370;
+            --accent: #14B8A6;
+            --accent-soft: rgba(20,184,166,0.08);
+            --accent-glow: rgba(20,184,166,0.14);
+            --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+            --body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
+
         html { scroll-behavior: smooth; }
-        body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; line-height: 1.6; }
-        .grain { position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.025; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
-        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 24px; }
-        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; background: rgba(5,5,5,0.85); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid var(--border); border-radius: 100px; padding: 12px 12px 12px 24px; }
-        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); font-weight: 600; font-size: 16px; letter-spacing: -0.02em; }
-        .nav-logo { width: 34px; height: 34px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
-        .nav-logo img { width: 100%; height: 100%; object-fit: cover; }
-        .nav-links { display: flex; align-items: center; gap: 2px; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 13.5px; font-weight: 500; padding: 8px 16px; border-radius: 100px; transition: all 0.3s var(--ease); }
-        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-        .lang-switch { display: flex; align-items: center; gap: 2px; padding: 4px; background: rgba(255,255,255,0.04); border-radius: 100px; border: 1px solid var(--border); }
-        .lang-btn { padding: 5px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; border: none; background: none; transition: all 0.3s var(--ease); letter-spacing: 0.02em; font-family: var(--sans); }
-        .lang-btn:hover { color: var(--text); }
-        .lang-btn.active { background: rgba(255,255,255,0.1); color: var(--text); }
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+            font-weight: 400;
+        }
 
-        .page-hero { padding: 160px 24px 80px; text-align: center; position: relative; overflow: hidden; }
-        .page-hero-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, rgba(0,224,184,0.1), transparent 70%); pointer-events: none; opacity: 0; }
-        .page-hero h1 { font-family: var(--sans); font-size: clamp(36px, 6vw, 60px); font-weight: 700; letter-spacing: -0.045em; line-height: 1; margin-bottom: 16px; position: relative; z-index: 1; opacity: 0; }
-        .page-hero h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; }
-        .page-hero p { font-size: 15px; color: var(--text-muted); position: relative; z-index: 1; opacity: 0; }
+        ::selection { background: rgba(20,184,166,0.25); }
 
-        .content { max-width: 720px; margin: 0 auto; padding: 0 24px 120px; }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 32px; margin-bottom: 12px; transition: border-color 0.4s var(--ease); opacity: 0; transform: translateY(30px); }
+        .grain {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.022;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ===== NAV ===== */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 20px 24px;
+            transition: padding 0.5s var(--ease);
+        }
+        .nav.is-scrolled { padding: 12px 24px; }
+        .nav-inner {
+            max-width: 1180px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(10,10,12,0.55);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 10px 10px 10px 20px;
+            transition: all 0.5s var(--ease);
+        }
+        .nav.is-scrolled .nav-inner {
+            border-radius: 100px;
+            background: rgba(10,10,12,0.8);
+            padding: 8px 8px 8px 20px;
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none; color: var(--text);
+            font-weight: 600; font-size: 15.5px;
+            letter-spacing: -0.01em;
+        }
+        .nav-icon {
+            width: 32px; height: 32px;
+            border-radius: 9px; overflow: hidden; flex-shrink: 0;
+        }
+        .nav-icon img { width: 100%; height: 100%; display: block; }
+        .nav-right { display: flex; align-items: center; gap: 3px; }
+        .nav-right a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 13.5px; font-weight: 500;
+            padding: 7px 14px; border-radius: 100px;
+            transition: all 0.3s var(--ease);
+            letter-spacing: 0.005em;
+        }
+        .nav-right a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+        .lang-sw {
+            display: flex; align-items: center; gap: 1px;
+            padding: 3px; margin: 0 4px;
+            background: rgba(255,255,255,0.035);
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .lang-b {
+            padding: 5px 9px; border-radius: 100px;
+            font-size: 11px; font-weight: 600; font-family: var(--body);
+            color: var(--text-muted); cursor: pointer;
+            border: none; background: none;
+            transition: all 0.25s var(--ease);
+            letter-spacing: 0.04em;
+        }
+        .lang-b:hover { color: var(--text-dim); }
+        .lang-b.on { background: rgba(255,255,255,0.09); color: var(--text); }
+
+        /* ===== HERO ===== */
+        .page-hero {
+            padding: 180px 24px 80px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .page-hero-glow {
+            position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+            width: 900px; height: 500px;
+            background: radial-gradient(ellipse, var(--accent-glow), transparent 65%);
+            pointer-events: none; opacity: 0;
+        }
+        .hero-grid {
+            position: absolute; inset: 0; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
+        }
+        .page-hero h1 {
+            font-family: var(--body); font-size: clamp(40px, 6vw, 64px);
+            font-weight: 700; letter-spacing: -0.045em; line-height: 1;
+            margin-bottom: 18px; position: relative; z-index: 1; opacity: 0;
+        }
+        .page-hero h1 em {
+            font-family: var(--display); font-style: italic; font-weight: 400;
+        }
+        .page-hero p {
+            font-size: 16px; color: var(--text-dim);
+            position: relative; z-index: 1; opacity: 0;
+        }
+
+        /* ===== CONTENT ===== */
+        .content { max-width: 720px; margin: 0 auto; padding: 20px 24px 120px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 12px;
+            transition: border-color 0.4s var(--ease);
+            opacity: 0; transform: translateY(30px);
+        }
         .card:hover { border-color: var(--border-hover); }
-        .card h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 14px; }
-        .card p { font-size: 14px; color: var(--text-dim); line-height: 1.8; }
+        .card h2 {
+            font-size: 17px; font-weight: 600;
+            letter-spacing: -0.025em; margin-bottom: 14px;
+        }
+        .card p {
+            font-size: 14px; color: var(--text-dim); line-height: 1.8;
+        }
         .card ul { padding-left: 20px; margin: 8px 0; }
-        .card li { font-size: 14px; color: var(--text-dim); line-height: 1.8; margin-bottom: 4px; }
+        .card li {
+            font-size: 14px; color: var(--text-dim);
+            line-height: 1.8; margin-bottom: 4px;
+        }
         .card strong { color: var(--text); font-weight: 600; }
         .card a { color: var(--accent); text-decoration: none; }
         .card a:hover { text-decoration: underline; }
 
-        .footer { border-top: 1px solid var(--border); max-width: 1200px; margin: 0 auto; padding: 32px 24px; text-align: center; }
-        .footer p { font-size: 13px; color: var(--text-muted); }
-        .footer a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
-        .footer a:hover { color: var(--text); }
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid var(--border);
+            max-width: 1180px; margin: 0 auto;
+            padding: 40px 24px; text-align: center;
+        }
+        .footer-brand {
+            display: flex; align-items: center; gap: 10px;
+            justify-content: center; margin-bottom: 14px;
+        }
+        .footer-icon {
+            width: 24px; height: 24px; border-radius: 6px;
+            overflow: hidden; flex-shrink: 0;
+        }
+        .footer-icon img { width: 100%; height: 100%; display: block; }
+        .footer-brand span {
+            font-size: 14px; font-weight: 600;
+            letter-spacing: -0.01em; color: var(--text-dim);
+        }
+        .footer-links { margin-bottom: 14px; }
+        .footer-links a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 13px; font-weight: 500;
+            padding: 0 12px;
+            transition: color 0.3s var(--ease);
+        }
+        .footer-links a:hover { color: var(--text); }
+        .footer p {
+            font-size: 12px; color: var(--text-muted);
+            letter-spacing: 0.01em;
+        }
 
-        @media (max-width: 640px) { .nav-links a:not(:last-child) { display: none; } .card { padding: 24px; } }
+        @media (max-width: 640px) {
+            .nav-right a.nav-link-hide { display: none; }
+            .card { padding: 24px; }
+        }
     </style>
 </head>
 <body>
 <div class="grain"></div>
 
-<nav class="nav">
+<nav class="nav" id="nav">
     <div class="nav-inner">
         <a href="index.html" class="nav-brand">
-            <div class="nav-logo"><img src="icon.png" alt="DiaBuddy"></div>
+            <div class="nav-icon"><img src="icon.png" alt="DiaBuddy"></div>
             DiaBuddy
         </a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="support.html">Support</a>
-            <div class="lang-switch">
-                <button class="lang-btn active" data-lang="en">EN</button>
-                <button class="lang-btn" data-lang="ru">RU</button>
-                <button class="lang-btn" data-lang="uz">UZ</button>
+        <div class="nav-right">
+            <a href="index.html" class="nav-link-hide" data-i18n="nav_home">Home</a>
+            <a href="support.html" class="nav-link-hide" data-i18n="nav_support">Support</a>
+            <div class="lang-sw">
+                <button class="lang-b on" data-lang="en">EN</button>
+                <button class="lang-b" data-lang="ru">RU</button>
+                <button class="lang-b" data-lang="uz">UZ</button>
             </div>
         </div>
     </div>
 </nav>
 
 <div class="page-hero">
+    <div class="hero-grid"></div>
     <div class="page-hero-glow" id="hero-glow"></div>
     <h1 data-i18n="title">Privacy <em>Policy</em></h1>
     <p data-i18n="updated">Last updated: February 12, 2026</p>
 </div>
 
 <div class="content">
-    <div class="card"><h2>1. Introduction</h2><p>DiaBuddy ("we", "our", "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our mobile application.</p></div>
-    <div class="card"><h2>2. Information We Collect</h2><p>We collect the following types of information:</p><ul><li><strong>Account Information:</strong> Email address, name, and profile photo when you sign up via Google, Apple, or email.</li><li><strong>Food Data:</strong> Photos of food you scan, nutritional analysis results, meal history, and dietary preferences.</li><li><strong>Health Information:</strong> Diabetes type, weight, height, age, gender, activity level, and daily calorie goals that you voluntarily provide during onboarding.</li><li><strong>Device Information:</strong> Device type, operating system version, and app usage analytics.</li></ul></div>
-    <div class="card"><h2>3. How We Use Your Information</h2><ul><li>Provide AI-powered food analysis and nutritional tracking</li><li>Calculate personalized calorie goals and dietary recommendations</li><li>Display warnings for foods that may be dangerous for diabetics</li><li>Sync your data across devices</li><li>Improve our AI food recognition accuracy</li></ul></div>
-    <div class="card"><h2>4. Data Storage & Security</h2><p>Your data is stored securely using Supabase cloud infrastructure with encryption at rest and in transit. Authentication tokens are stored in your device's secure keychain. We implement industry-standard security measures to protect your personal information.</p></div>
-    <div class="card"><h2>5. Third-Party Services</h2><ul><li><strong>Supabase:</strong> Database and authentication</li><li><strong>Google Sign-In / Apple Sign-In:</strong> Authentication providers</li><li><strong>OpenAI:</strong> AI-powered food analysis (food photos are sent for analysis)</li></ul></div>
-    <div class="card"><h2>6. Data Sharing</h2><p>We do not sell, trade, or rent your personal information to third parties. Your food photos are sent to AI services solely for nutritional analysis and are not stored by these services beyond the analysis request.</p></div>
-    <div class="card"><h2>7. Your Rights</h2><ul><li>Access your personal data</li><li>Delete your account and all associated data</li><li>Export your food history data</li><li>Opt out of analytics collection</li></ul><p>You can delete your account directly from the app's Profile settings.</p></div>
-    <div class="card"><h2>8. Children's Privacy</h2><p>DiaBuddy is not intended for children under 13. We do not knowingly collect personal information from children under 13.</p></div>
-    <div class="card"><h2>9. Changes to This Policy</h2><p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy in the app and updating the "Last updated" date.</p></div>
-    <div class="card"><h2>10. Contact Us</h2><p>If you have questions about this Privacy Policy, please contact us at:</p><p style="margin-top:8px"><strong>Email:</strong> <a href="mailto:dia.buddy2026@mail.ru">dia.buddy2026@mail.ru</a></p></div>
+    <div class="card"><h2 data-i18n="s1_title">1. Introduction</h2><p data-i18n="s1_text">DiaBuddy ("we", "our", "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our mobile application.</p></div>
+    <div class="card"><h2 data-i18n="s2_title">2. Information We Collect</h2><p data-i18n="s2_text">We collect the following types of information:</p><ul><li><strong>Account Information:</strong> Email address, name, and profile photo when you sign up via Google, Apple, or email.</li><li><strong>Food Data:</strong> Photos of food you scan, nutritional analysis results, meal history, and dietary preferences.</li><li><strong>Health Information:</strong> Diabetes type, weight, height, age, gender, activity level, and daily calorie goals that you voluntarily provide during onboarding.</li><li><strong>Device Information:</strong> Device type, operating system version, and app usage analytics.</li></ul></div>
+    <div class="card"><h2 data-i18n="s3_title">3. How We Use Your Information</h2><ul><li data-i18n="s3_1">Provide AI-powered food analysis and nutritional tracking</li><li data-i18n="s3_2">Calculate personalized calorie goals and dietary recommendations</li><li data-i18n="s3_3">Display warnings for foods that may be dangerous for diabetics</li><li data-i18n="s3_4">Sync your data across devices</li><li data-i18n="s3_5">Improve our AI food recognition accuracy</li></ul></div>
+    <div class="card"><h2 data-i18n="s4_title">4. Data Storage & Security</h2><p data-i18n="s4_text">Your data is stored securely using Supabase cloud infrastructure with encryption at rest and in transit. Authentication tokens are stored in your device's secure keychain. We implement industry-standard security measures to protect your personal information.</p></div>
+    <div class="card"><h2 data-i18n="s5_title">5. Third-Party Services</h2><ul><li><strong>Supabase:</strong> <span data-i18n="s5_1">Database and authentication</span></li><li><strong>Google Sign-In / Apple Sign-In:</strong> <span data-i18n="s5_2">Authentication providers</span></li><li><strong>OpenAI:</strong> <span data-i18n="s5_3">AI-powered food analysis (food photos are sent for analysis)</span></li></ul></div>
+    <div class="card"><h2 data-i18n="s6_title">6. Data Sharing</h2><p data-i18n="s6_text">We do not sell, trade, or rent your personal information to third parties. Your food photos are sent to AI services solely for nutritional analysis and are not stored by these services beyond the analysis request.</p></div>
+    <div class="card"><h2 data-i18n="s7_title">7. Your Rights</h2><ul><li data-i18n="s7_1">Access your personal data</li><li data-i18n="s7_2">Delete your account and all associated data</li><li data-i18n="s7_3">Export your food history data</li><li data-i18n="s7_4">Opt out of analytics collection</li></ul><p data-i18n="s7_text">You can delete your account directly from the app's Profile settings.</p></div>
+    <div class="card"><h2 data-i18n="s8_title">8. Children's Privacy</h2><p data-i18n="s8_text">DiaBuddy is not intended for children under 13. We do not knowingly collect personal information from children under 13.</p></div>
+    <div class="card"><h2 data-i18n="s9_title">9. Changes to This Policy</h2><p data-i18n="s9_text">We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy in the app and updating the "Last updated" date.</p></div>
+    <div class="card"><h2 data-i18n="s10_title">10. Contact Us</h2><p data-i18n="s10_text">If you have questions about this Privacy Policy, please contact us at:</p><p style="margin-top:8px"><strong>Email:</strong> <a href="mailto:dia.buddy2026@mail.ru">dia.buddy2026@mail.ru</a></p></div>
 </div>
 
 <footer class="footer">
-    <p>&copy; 2026 DiaBuddy &nbsp;&middot;&nbsp; <a href="index.html">Home</a> &nbsp;&middot;&nbsp; <a href="support.html">Support</a></p>
+    <div class="footer-brand">
+        <div class="footer-icon"><img src="icon.png" alt="DiaBuddy"></div>
+        <span>DiaBuddy</span>
+    </div>
+    <div class="footer-links">
+        <a href="index.html" data-i18n="nav_home">Home</a>
+        <a href="support.html" data-i18n="nav_support">Support</a>
+    </div>
+    <p>&copy; 2026 DiaBuddy. <span data-i18n="footer_rights">All rights reserved.</span></p>
 </footer>
 
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
+// Nav scroll morph
+window.addEventListener("scroll", () => {
+    document.getElementById("nav").classList.toggle("is-scrolled", window.scrollY > 40);
+});
+
+// Hero animations
 const tl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1 }});
 tl.to("#hero-glow", { opacity: 1, duration: 1.5 }, 0)
   .to(".page-hero h1", { opacity: 1, y: 0, duration: 0.9 }, 0.15)
@@ -116,6 +279,7 @@ tl.to("#hero-glow", { opacity: 1, duration: 1.5 }, 0)
   .to(".page-hero p", { opacity: 1, y: 0, duration: 0.8 }, 0.3)
   .fromTo(".page-hero p", { y: 20 }, { y: 0 }, 0.3);
 
+// Scroll reveal cards
 gsap.utils.toArray(".card").forEach((card, i) => {
     gsap.to(card, {
         opacity: 1, y: 0,
@@ -127,20 +291,74 @@ gsap.utils.toArray(".card").forEach((card, i) => {
 
 // i18n
 const translations = {
-    en: { title: 'Privacy <em>Policy</em>', updated: 'Last updated: February 12, 2026' },
-    ru: { title: 'Политика <em>конфиденциальности</em>', updated: 'Последнее обновление: 12 февраля 2026' },
-    uz: { title: 'Maxfiylik <em>siyosati</em>', updated: "So'nggi yangilanish: 2026-yil 12-fevral" }
+    en: {
+        nav_home: "Home", nav_support: "Support", footer_rights: "All rights reserved.",
+        title: 'Privacy <em>Policy</em>', updated: 'Last updated: February 12, 2026',
+        s1_title: "1. Introduction", s1_text: 'DiaBuddy ("we", "our", "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our mobile application.',
+        s2_title: "2. Information We Collect", s2_text: "We collect the following types of information:",
+        s3_title: "3. How We Use Your Information",
+        s3_1: "Provide AI-powered food analysis and nutritional tracking",
+        s3_2: "Calculate personalized calorie goals and dietary recommendations",
+        s3_3: "Display warnings for foods that may be dangerous for diabetics",
+        s3_4: "Sync your data across devices",
+        s3_5: "Improve our AI food recognition accuracy",
+        s4_title: "4. Data Storage & Security", s4_text: "Your data is stored securely using Supabase cloud infrastructure with encryption at rest and in transit. Authentication tokens are stored in your device's secure keychain. We implement industry-standard security measures to protect your personal information.",
+        s5_title: "5. Third-Party Services", s5_1: "Database and authentication", s5_2: "Authentication providers", s5_3: "AI-powered food analysis (food photos are sent for analysis)",
+        s6_title: "6. Data Sharing", s6_text: "We do not sell, trade, or rent your personal information to third parties. Your food photos are sent to AI services solely for nutritional analysis and are not stored by these services beyond the analysis request.",
+        s7_title: "7. Your Rights", s7_1: "Access your personal data", s7_2: "Delete your account and all associated data", s7_3: "Export your food history data", s7_4: "Opt out of analytics collection", s7_text: "You can delete your account directly from the app's Profile settings.",
+        s8_title: "8. Children's Privacy", s8_text: "DiaBuddy is not intended for children under 13. We do not knowingly collect personal information from children under 13.",
+        s9_title: "9. Changes to This Policy", s9_text: 'We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy in the app and updating the "Last updated" date.',
+        s10_title: "10. Contact Us", s10_text: "If you have questions about this Privacy Policy, please contact us at:"
+    },
+    ru: {
+        nav_home: "Главная", nav_support: "Поддержка", footer_rights: "Все права защищены.",
+        title: 'Политика <em>конфиденциальности</em>', updated: 'Последнее обновление: 12 февраля 2026',
+        s1_title: "1. Введение", s1_text: 'DiaBuddy ("мы", "наш") стремится защитить вашу конфиденциальность. Эта Политика конфиденциальности объясняет, как мы собираем, используем и защищаем вашу информацию при использовании нашего мобильного приложения.',
+        s2_title: "2. Информация, которую мы собираем", s2_text: "Мы собираем следующие типы информации:",
+        s3_title: "3. Как мы используем вашу информацию",
+        s3_1: "AI-анализ питания и отслеживание нутриентов",
+        s3_2: "Расчёт персональных целей по калориям и рекомендаций",
+        s3_3: "Предупреждения о продуктах, опасных для диабетиков",
+        s3_4: "Синхронизация данных между устройствами",
+        s3_5: "Улучшение точности AI-распознавания еды",
+        s4_title: "4. Хранение и безопасность данных", s4_text: "Ваши данные хранятся в защищённой облачной инфраструктуре Supabase с шифрованием при хранении и передаче. Токены аутентификации хранятся в защищённом хранилище вашего устройства.",
+        s5_title: "5. Сторонние сервисы", s5_1: "База данных и аутентификация", s5_2: "Провайдеры аутентификации", s5_3: "AI-анализ еды (фото отправляются для анализа)",
+        s6_title: "6. Передача данных", s6_text: "Мы не продаём, не обмениваем и не сдаём в аренду вашу личную информацию третьим лицам. Фотографии еды отправляются в AI-сервисы исключительно для анализа питания.",
+        s7_title: "7. Ваши права", s7_1: "Доступ к вашим личным данным", s7_2: "Удаление аккаунта и всех связанных данных", s7_3: "Экспорт истории питания", s7_4: "Отказ от сбора аналитики", s7_text: "Вы можете удалить аккаунт в настройках Профиля приложения.",
+        s8_title: "8. Конфиденциальность детей", s8_text: "DiaBuddy не предназначен для детей младше 13 лет. Мы сознательно не собираем личную информацию детей младше 13 лет.",
+        s9_title: "9. Изменения в политике", s9_text: "Мы можем время от времени обновлять эту Политику конфиденциальности. Мы уведомим вас о любых изменениях, опубликовав новую политику в приложении.",
+        s10_title: "10. Свяжитесь с нами", s10_text: "Если у вас есть вопросы об этой Политике конфиденциальности, свяжитесь с нами:"
+    },
+    uz: {
+        nav_home: "Bosh sahifa", nav_support: "Yordam", footer_rights: "Barcha huquqlar himoyalangan.",
+        title: 'Maxfiylik <em>siyosati</em>', updated: "So'nggi yangilanish: 2026-yil 12-fevral",
+        s1_title: "1. Kirish", s1_text: "DiaBuddy sizning maxfiyligingizni himoya qilishga intiladi. Ushbu Maxfiylik siyosati mobil ilovamizdan foydalanganingizda ma'lumotlaringizni qanday yig'ishimiz, ishlatishimiz va himoya qilishimizni tushuntiradi.",
+        s2_title: "2. Yig'iladigan ma'lumotlar", s2_text: "Biz quyidagi turdagi ma'lumotlarni yig'amiz:",
+        s3_title: "3. Ma'lumotlardan foydalanish",
+        s3_1: "AI yordamida ovqat tahlili va oziqlanish kuzatuvi",
+        s3_2: "Shaxsiy kaloriya maqsadlari va tavsiyalarni hisoblash",
+        s3_3: "Diabetiklar uchun xavfli bo'lishi mumkin bo'lgan ovqatlar haqida ogohlantirishlar",
+        s3_4: "Ma'lumotlarni qurilmalar o'rtasida sinxronlash",
+        s3_5: "AI ovqat tanish aniqligini yaxshilash",
+        s4_title: "4. Ma'lumotlarni saqlash va xavfsizlik", s4_text: "Ma'lumotlaringiz Supabase bulutli infratuzilmasida shifrlangan holda saqlanadi. Autentifikatsiya tokenlari qurilmangizning xavfsiz xotirasida saqlanadi.",
+        s5_title: "5. Uchinchi tomon xizmatlari", s5_1: "Ma'lumotlar bazasi va autentifikatsiya", s5_2: "Autentifikatsiya provayderlari", s5_3: "AI ovqat tahlili (suratlar tahlil uchun yuboriladi)",
+        s6_title: "6. Ma'lumotlarni ulashish", s6_text: "Biz shaxsiy ma'lumotlaringizni uchinchi tomonlarga sotmaymiz. Ovqat suratlari faqat oziqlanish tahlili uchun AI xizmatlariga yuboriladi.",
+        s7_title: "7. Sizning huquqlaringiz", s7_1: "Shaxsiy ma'lumotlaringizga kirish", s7_2: "Hisobingiz va barcha bog'liq ma'lumotlarni o'chirish", s7_3: "Ovqatlanish tarixini eksport qilish", s7_4: "Analitika yig'ishdan voz kechish", s7_text: "Hisobingizni ilovaning Profil sozlamalaridan o'chirishingiz mumkin.",
+        s8_title: "8. Bolalar maxfiyligi", s8_text: "DiaBuddy 13 yoshdan kichik bolalar uchun mo'ljallanmagan. Biz 13 yoshdan kichik bolalarning shaxsiy ma'lumotlarini bila turib yig'maymiz.",
+        s9_title: "9. Siyosatdagi o'zgarishlar", s9_text: "Biz ushbu Maxfiylik siyosatini vaqti-vaqti bilan yangilashimiz mumkin. Har qanday o'zgarishlar haqida ilovada yangi siyosatni joylashtirish orqali xabar beramiz.",
+        s10_title: "10. Biz bilan bog'laning", s10_text: "Ushbu Maxfiylik siyosati haqida savollaringiz bo'lsa, biz bilan bog'laning:"
+    }
 };
 function setLang(lang) {
     localStorage.setItem("diabuddy-lang", lang);
-    document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+    document.querySelectorAll(".lang-b").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
     const t = translations[lang] || translations.en;
     document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.dataset.i18n;
         if (t[key]) el.innerHTML = t[key];
     });
 }
-document.querySelectorAll(".lang-btn").forEach(btn => {
+document.querySelectorAll(".lang-b").forEach(btn => {
     btn.addEventListener("click", () => setLang(btn.dataset.lang));
 });
 const savedLang = localStorage.getItem("diabuddy-lang");
