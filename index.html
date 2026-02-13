@@ -3,637 +3,621 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DiaBuddy - AI Food Tracker for Diabetes</title>
+    <title>DiaBuddy — AI Food Intelligence for Diabetes</title>
     <meta name="description" content="AI-powered nutrition tracking for people with diabetes. Scan food with your camera, get instant analysis, and manage your health.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #06060b;
-            --bg-secondary: #0c0c14;
-            --border: rgba(255,255,255,0.06);
+            --bg: #09090b;
+            --bg-elevated: #111113;
+            --bg-card: rgba(255,255,255,0.025);
+            --border: rgba(255,255,255,0.055);
             --border-hover: rgba(255,255,255,0.12);
-            --text: #ffffff;
-            --text-secondary: rgba(255,255,255,0.6);
-            --text-tertiary: rgba(255,255,255,0.4);
-            --blue: #3B82F6;
-            --blue-glow: rgba(59,130,246,0.4);
-            --green: #10B981;
-            --purple: #8B5CF6;
+            --text: #f4f4f5;
+            --text-dim: #a1a1aa;
+            --text-muted: #71717a;
+            --teal: #2dd4bf;
+            --teal-dim: rgba(45,212,191,0.12);
+            --teal-glow: rgba(45,212,191,0.25);
+            --amber: #fbbf24;
+            --amber-dim: rgba(251,191,36,0.1);
+            --rose: #fb7185;
+            --rose-dim: rgba(251,113,133,0.1);
+            --violet: #a78bfa;
+            --violet-dim: rgba(167,139,250,0.1);
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: var(--font-body);
             background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
         }
 
-        /* ========== NOISE GRAIN OVERLAY ========== */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+        /* ========== GRAIN ========== */
+        .grain {
+            position: fixed; inset: 0;
             pointer-events: none;
             z-index: 9999;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.035;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
 
         /* ========== NAVIGATION ========== */
         .nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
+            position: fixed; top: 0; left: 0; right: 0;
             z-index: 100;
-            padding: 16px 24px;
-            transition: backdrop-filter 0.3s;
+            padding: 20px 24px;
         }
-        .nav-inner {
-            max-width: 1200px;
+        .nav-bar {
+            max-width: 1120px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255,255,255,0.03);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(9,9,11,0.7);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 12px 20px;
+            border-radius: 100px;
+            padding: 10px 10px 10px 24px;
         }
         .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: -0.5px;
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; color: var(--text);
+            font-family: var(--font-display);
+            font-weight: 700; font-size: 17px;
+            letter-spacing: -0.02em;
         }
-        .nav-logo {
-            width: 36px; height: 36px;
-            background: linear-gradient(135deg, var(--blue), #2563EB);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
+        .nav-brand-mark {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--teal), #06b6d4);
+            border-radius: 9px;
+            display: grid; place-items: center;
+            position: relative;
+        }
+        .nav-brand-mark::after {
+            content: '';
+            position: absolute; inset: -4px;
+            background: linear-gradient(135deg, var(--teal), #06b6d4);
+            border-radius: 12px;
+            opacity: 0.2;
+            filter: blur(8px);
         }
         .nav-links {
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 4px;
         }
         .nav-links a {
-            color: var(--text-secondary);
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 14px; font-weight: 500;
             padding: 8px 16px;
-            border-radius: 10px;
-            transition: all 0.2s;
+            border-radius: 100px;
+            transition: all 0.25s var(--ease-out-expo);
         }
-        .nav-links a:hover {
-            color: var(--text);
-            background: rgba(255,255,255,0.06);
-        }
+        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
         .nav-cta {
             background: var(--text) !important;
             color: var(--bg) !important;
             font-weight: 600 !important;
+            padding: 10px 22px !important;
         }
-        .nav-cta:hover {
-            opacity: 0.9;
-            transform: scale(1.02);
-        }
+        .nav-cta:hover { opacity: 0.88; transform: scale(1.03); }
 
         /* ========== HERO ========== */
         .hero {
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             text-align: center;
-            padding: 120px 24px 80px;
-            position: relative;
-            overflow: hidden;
+            padding: 140px 24px 100px;
+            position: relative; overflow: hidden;
         }
 
-        /* Mesh gradient background */
-        .hero-glow {
+        /* Atmospheric orbs */
+        .hero-orb {
             position: absolute;
-            top: -30%; left: -20%;
-            width: 140%; height: 140%;
-            pointer-events: none;
-            background:
-                radial-gradient(ellipse at 30% 20%, rgba(59,130,246,0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 30%, rgba(139,92,246,0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(16,185,129,0.08) 0%, transparent 50%);
-        }
-
-        /* Dot grid */
-        .hero-grid {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-            background-size: 32px 32px;
-            -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
-            mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
-        }
-
-        /* Badge */
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px 6px 8px;
-            background: rgba(59,130,246,0.08);
-            border: 1px solid rgba(59,130,246,0.2);
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #60A5FA;
-            margin-bottom: 32px;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease-out;
-        }
-        .badge-dot {
-            width: 8px; height: 8px;
-            background: var(--blue);
             border-radius: 50%;
-            animation: pulse-dot 2s ease-in-out infinite;
+            filter: blur(100px);
+            pointer-events: none;
+            animation: orbFloat 20s ease-in-out infinite;
         }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
+        .hero-orb--teal {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(45,212,191,0.12), transparent 70%);
+            top: -10%; left: -10%;
+            animation-delay: 0s;
+        }
+        .hero-orb--amber {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(251,191,36,0.06), transparent 70%);
+            bottom: -10%; right: -15%;
+            animation-delay: -7s;
+        }
+        .hero-orb--violet {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(167,139,250,0.06), transparent 70%);
+            top: 30%; right: -5%;
+            animation-delay: -14s;
+        }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -20px) scale(1.05); }
+            66% { transform: translate(-20px, 15px) scale(0.95); }
+        }
+
+        /* Animated glucose curve */
+        .hero-curve {
+            position: absolute;
+            width: 120%;
+            left: -10%;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            opacity: 0.07;
+        }
+        .hero-curve path {
+            stroke: var(--teal);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 2000;
+            stroke-dashoffset: 2000;
+            animation: drawCurve 4s var(--ease-out-expo) forwards;
+        }
+        @keyframes drawCurve {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 5px 14px 5px 6px;
+            background: var(--teal-dim);
+            border: 1px solid rgba(45,212,191,0.15);
+            border-radius: 100px;
+            font-size: 12.5px; font-weight: 500;
+            color: var(--teal);
+            letter-spacing: 0.02em;
+            margin-bottom: 36px;
+            position: relative; z-index: 1;
+            animation: fadeUp 0.8s var(--ease-out-expo) both;
+        }
+        .hero-badge-dot {
+            width: 7px; height: 7px;
+            background: var(--teal);
+            border-radius: 50%;
+            position: relative;
+        }
+        .hero-badge-dot::after {
+            content: '';
+            position: absolute; inset: -3px;
+            background: var(--teal);
+            border-radius: 50%;
+            animation: ping 2s ease-in-out infinite;
+        }
+        @keyframes ping {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 0; transform: scale(2.5); }
         }
 
         .hero h1 {
-            font-size: clamp(44px, 8vw, 80px);
+            font-family: var(--font-display);
+            font-size: clamp(42px, 8vw, 82px);
             font-weight: 800;
-            letter-spacing: -3px;
-            line-height: 1;
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease-out 0.1s both;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            margin-bottom: 28px;
+            position: relative; z-index: 1;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.1s both;
         }
-        .gradient-text {
-            background: linear-gradient(135deg, #ffffff 0%, #3B82F6 50%, #10B981 100%);
+        .hero h1 em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--teal), #06b6d4, var(--violet));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .hero .subtitle {
-            font-size: clamp(16px, 2.5vw, 20px);
-            color: var(--text-secondary);
-            max-width: 520px;
-            line-height: 1.7;
-            margin-bottom: 48px;
-            position: relative;
-            z-index: 1;
+
+        .hero-sub {
+            font-size: clamp(16px, 2.2vw, 19px);
+            color: var(--text-dim);
+            max-width: 480px;
+            line-height: 1.65;
+            margin-bottom: 44px;
+            position: relative; z-index: 1;
             font-weight: 400;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.2s both;
         }
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
+
+        .hero-actions {
+            display: flex; gap: 14px;
             align-items: center;
             flex-wrap: wrap;
             justify-content: center;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease-out 0.3s both;
+            position: relative; z-index: 1;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.3s both;
         }
 
-        /* Primary CTA */
         .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: #ffffff;
-            color: #0A0A0F;
-            padding: 16px 32px;
-            border-radius: 14px;
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--text);
+            color: var(--bg);
+            padding: 15px 30px;
+            border-radius: 100px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(59,130,246,0.15), transparent);
-            transition: left 0.5s ease;
+            font-weight: 600; font-size: 15px;
+            transition: all 0.35s var(--ease-out-expo);
+            position: relative; overflow: hidden;
         }
         .btn-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(255,255,255,0.15), 0 0 40px rgba(59,130,246,0.2);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 16px 48px rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.1);
         }
-        .btn-primary:hover::before { left: 100%; }
-        .btn-primary svg { width: 22px; height: 22px; }
+        .btn-primary svg { width: 20px; height: 20px; }
 
-        /* Secondary CTA */
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-secondary);
+        .btn-ghost {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--text-dim);
             text-decoration: none;
-            font-size: 15px;
-            font-weight: 500;
-            padding: 16px 24px;
-            border-radius: 14px;
+            font-size: 14.5px; font-weight: 500;
+            padding: 15px 24px;
+            border-radius: 100px;
             border: 1px solid var(--border);
-            transition: all 0.3s;
+            transition: all 0.35s var(--ease-out-expo);
         }
-        .btn-secondary:hover {
-            color: var(--text);
-            border-color: var(--border-hover);
+        .btn-ghost:hover {
+            color: var(--text); border-color: var(--border-hover);
             background: rgba(255,255,255,0.03);
         }
 
-        /* ========== LOGOS / TRUST BAR ========== */
-        .trust-bar {
-            padding: 60px 24px 20px;
+        /* ========== TRUST BAR ========== */
+        .trust {
+            padding: 80px 24px 40px;
             text-align: center;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease-out 0.5s both;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.5s both;
         }
-        .trust-bar p {
-            font-size: 12px;
-            font-weight: 500;
+        .trust-label {
+            font-size: 11px; font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-tertiary);
-            margin-bottom: 20px;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 24px;
         }
-        .trust-logos {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            opacity: 0.4;
+        .trust-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 48px; flex-wrap: wrap;
         }
-        .trust-logos span {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            letter-spacing: 0.02em;
+        .trust-row span {
+            font-family: var(--font-display);
+            font-size: 15px; font-weight: 600;
+            color: var(--text-muted);
+            opacity: 0.5;
+            transition: opacity 0.3s;
         }
+        .trust-row span:hover { opacity: 0.8; }
+
+        /* ========== SECTION GLOBALS ========== */
+        .section {
+            padding: 120px 24px;
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+        .section-eyebrow {
+            font-family: var(--font-display);
+            font-size: 12px; font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--teal);
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-eyebrow::before {
+            content: '';
+            width: 20px; height: 1.5px;
+            background: var(--teal);
+            border-radius: 2px;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(30px, 5vw, 50px);
+            font-weight: 700;
+            letter-spacing: -0.035em;
+            line-height: 1.08;
+            margin-bottom: 14px;
+        }
+        .section-desc {
+            font-size: 17px;
+            color: var(--text-dim);
+            max-width: 460px;
+            line-height: 1.65;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 72px;
+        }
+        .section-header .section-desc { margin: 0 auto; }
 
         /* ========== BENTO FEATURES ========== */
-        .features {
-            padding: 120px 24px;
-            max-width: 1100px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--blue);
-            margin-bottom: 16px;
-        }
-        .section-label::before {
-            content: '';
-            width: 24px; height: 1px;
-            background: var(--blue);
-        }
-        .features .section-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-        .features h2 {
-            font-size: clamp(32px, 5vw, 48px);
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            margin-bottom: 16px;
-            line-height: 1.1;
-        }
-        .features .section-desc {
-            font-size: 18px;
-            color: var(--text-secondary);
-            max-width: 500px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        /* Bento Grid */
-        .bento-grid {
+        .bento {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 14px;
         }
-        .bento-item {
-            background: rgba(255,255,255,0.02);
+        .bento-card {
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 22px;
             padding: 32px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
+            transition: all 0.5s var(--ease-out-expo);
         }
-        .bento-item::before {
+        .bento-card::before {
             content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
+            position: absolute; top: 0; left: 0; right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
             opacity: 0;
-            transition: opacity 0.4s;
+            transition: opacity 0.5s;
         }
-        .bento-item:hover {
+        .bento-card:hover {
             border-color: var(--border-hover);
             background: rgba(255,255,255,0.04);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(59,130,246,0.06);
+            transform: translateY(-3px);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4);
         }
-        .bento-item:hover::before { opacity: 1; }
+        .bento-card:hover::before { opacity: 1; }
 
-        .bento-wide { grid-column: span 2; }
-        .bento-tall { grid-row: span 2; }
+        .b-hero   { grid-column: span 8; min-height: 320px; }
+        .b-side   { grid-column: span 4; }
+        .b-third  { grid-column: span 4; }
+        .b-half   { grid-column: span 6; }
 
         .bento-icon {
-            width: 52px; height: 52px;
-            border-radius: 16px;
-            display: flex; align-items: center; justify-content: center;
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: grid; place-items: center;
             margin-bottom: 20px;
             position: relative;
         }
         .bento-icon::after {
             content: '';
-            position: absolute;
-            inset: -8px;
-            border-radius: 20px;
-            background: inherit;
-            opacity: 0.15;
-            filter: blur(12px);
+            position: absolute; inset: -6px;
+            border-radius: 18px;
+            background: inherit; opacity: 0.2;
+            filter: blur(10px);
         }
-        .bento-item h3 {
-            font-size: 18px;
-            font-weight: 600;
+        .bento-card h3 {
+            font-family: var(--font-display);
+            font-size: 18px; font-weight: 700;
+            letter-spacing: -0.02em;
             margin-bottom: 8px;
-            letter-spacing: -0.3px;
         }
-        .bento-item p {
+        .bento-card p {
             font-size: 14px;
-            color: var(--text-secondary);
+            color: var(--text-dim);
             line-height: 1.7;
         }
 
-        /* Feature visual elements */
-        .bento-visual {
-            margin-top: 24px;
-            border-radius: 16px;
-            overflow: hidden;
-            position: relative;
+        /* Animated bar visualization */
+        .viz-bars {
+            display: flex; align-items: flex-end;
+            gap: 5px; height: 100px;
+            margin-top: 28px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
         }
-
-        /* Animated bars for stats bento */
-        .mini-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 6px;
-            height: 80px;
-            margin-top: 24px;
-        }
-        .mini-bar {
+        .viz-bar {
             flex: 1;
-            border-radius: 6px;
-            animation: barGrow 1.5s ease-out forwards;
+            border-radius: 5px 5px 2px 2px;
             transform-origin: bottom;
+            animation: growBar 1.2s var(--ease-out-expo) forwards;
+            transform: scaleY(0);
         }
-        @keyframes barGrow {
-            from { transform: scaleY(0); }
+        @keyframes growBar {
             to { transform: scaleY(1); }
         }
 
-        /* Macro pills for macros bento */
-        .macro-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 20px;
+        /* Macro tags */
+        .macro-tags {
+            display: flex; flex-wrap: wrap; gap: 7px;
+            margin-top: 24px;
         }
-        .macro-pill {
-            padding: 8px 16px;
+        .macro-tag {
+            padding: 6px 13px;
             border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid;
+            font-size: 12px; font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        /* Scanner lines animation */
+        .scan-lines {
+            margin-top: 28px;
+            height: 80px;
+            position: relative;
+            border-radius: 12px;
+            background: rgba(45,212,191,0.03);
+            border: 1px solid rgba(45,212,191,0.08);
+            overflow: hidden;
+        }
+        .scan-line {
+            position: absolute;
+            left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--teal), transparent);
+            animation: scanMove 3s ease-in-out infinite;
+        }
+        @keyframes scanMove {
+            0%, 100% { top: 10%; opacity: 0.3; }
+            50% { top: 85%; opacity: 0.8; }
         }
 
         /* ========== HOW IT WORKS ========== */
-        .how-it-works {
-            padding: 120px 24px;
-            max-width: 900px;
-            margin: 0 auto;
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            counter-reset: step;
         }
-        .how-it-works .section-header {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-        .how-it-works h2 {
-            font-size: clamp(32px, 5vw, 48px);
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            margin-bottom: 16px;
-        }
-        .how-it-works .section-desc {
-            font-size: 18px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-        .steps {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 36px 32px;
             position: relative;
+            counter-increment: step;
+            transition: all 0.5s var(--ease-out-expo);
         }
-        .steps::before {
+        .step-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+        }
+        .step-num {
+            font-family: var(--font-display);
+            font-size: 64px; font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            margin-bottom: 20px;
+        }
+        .step-card h3 {
+            font-family: var(--font-display);
+            font-size: 19px; font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+        .step-card p {
+            font-size: 14.5px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+        /* Connector line */
+        .step-card:not(:last-child)::after {
             content: '';
             position: absolute;
-            left: 32px;
-            top: 0; bottom: 0;
-            width: 1px;
-            background: linear-gradient(to bottom, var(--blue), var(--purple), var(--green));
-            opacity: 0.3;
-        }
-        .step {
-            display: flex;
-            gap: 32px;
-            padding: 40px 0;
-            position: relative;
-        }
-        .step-number {
-            width: 64px; height: 64px;
-            min-width: 64px;
-            border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
-            font-weight: 800;
-            position: relative;
-            z-index: 1;
-        }
-        .step-content h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
-        }
-        .step-content p {
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.7;
+            top: 50%; right: -8px;
+            width: 16px; height: 1px;
+            background: var(--border-hover);
         }
 
         /* ========== STATS ========== */
-        .stats {
-            padding: 80px 24px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+            gap: 14px;
         }
         .stat-card {
             text-align: center;
-            padding: 40px 24px;
-            background: rgba(255,255,255,0.02);
+            padding: 44px 24px;
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            transition: all 0.3s;
+            border-radius: 22px;
+            transition: all 0.4s var(--ease-out-expo);
         }
         .stat-card:hover {
             border-color: var(--border-hover);
-            background: rgba(255,255,255,0.04);
             transform: translateY(-2px);
         }
-        .stat-number {
-            font-size: clamp(36px, 5vw, 48px);
+        .stat-val {
+            font-family: var(--font-display);
+            font-size: clamp(38px, 5vw, 52px);
             font-weight: 800;
-            letter-spacing: -2px;
-            background: linear-gradient(135deg, var(--blue), var(--green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: -0.04em;
             line-height: 1;
             margin-bottom: 8px;
         }
         .stat-label {
             font-size: 14px;
-            color: var(--text-tertiary);
+            color: var(--text-muted);
             font-weight: 500;
         }
 
-        /* ========== CTA SECTION ========== */
+        /* ========== CTA ========== */
         .cta-section {
-            padding: 120px 24px;
+            padding: 140px 24px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
         }
-        .cta-glow {
+        .cta-orb {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 600px; height: 400px;
-            background: radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 60%);
+            width: 700px; height: 500px;
+            background: radial-gradient(ellipse, rgba(45,212,191,0.1), transparent 65%);
             pointer-events: none;
+            animation: orbFloat 15s ease-in-out infinite;
         }
-        .cta-section h2 {
-            font-size: clamp(36px, 6vw, 56px);
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
-            line-height: 1.1;
-        }
-        .cta-section .subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 1;
-        }
+        .cta-section .section-title,
         .cta-section .btn-primary {
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
+        }
+        .cta-section .section-desc {
+            max-width: 420px;
+            margin: 0 auto 44px;
+            position: relative; z-index: 1;
         }
 
         /* ========== FOOTER ========== */
         .footer {
             border-top: 1px solid var(--border);
-            padding: 60px 24px 40px;
-            max-width: 1200px;
+            max-width: 1120px;
             margin: 0 auto;
+            padding: 64px 24px 40px;
         }
-        .footer-top {
+        .footer-grid {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 48px;
             flex-wrap: wrap;
-            gap: 32px;
+            gap: 40px;
+            margin-bottom: 56px;
         }
         .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: -0.5px;
-            margin-bottom: 12px;
+            font-family: var(--font-display);
+            font-weight: 700; font-size: 17px;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 14px;
+            letter-spacing: -0.02em;
         }
-        .footer-brand-logo {
-            width: 32px; height: 32px;
-            background: linear-gradient(135deg, var(--blue), #2563EB);
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
+        .footer-brand-icon {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, var(--teal), #06b6d4);
+            border-radius: 7px;
+            display: grid; place-items: center;
         }
         .footer-tagline {
             font-size: 14px;
-            color: var(--text-tertiary);
-            max-width: 280px;
+            color: var(--text-muted);
+            max-width: 260px;
             line-height: 1.6;
         }
-        .footer-columns {
-            display: flex;
-            gap: 64px;
-            flex-wrap: wrap;
+        .footer-cols {
+            display: flex; gap: 72px;
         }
         .footer-col h4 {
-            font-size: 13px;
-            font-weight: 600;
+            font-family: var(--font-display);
+            font-size: 12px; font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
+            letter-spacing: 0.12em;
+            color: var(--text-dim);
+            margin-bottom: 18px;
         }
         .footer-col a {
             display: block;
-            color: var(--text-tertiary);
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 14px;
-            padding: 4px 0;
+            padding: 3px 0;
             transition: color 0.2s;
         }
         .footer-col a:hover { color: var(--text); }
@@ -643,304 +627,307 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
+            flex-wrap: wrap; gap: 12px;
         }
         .footer-bottom p {
             font-size: 13px;
-            color: var(--text-tertiary);
+            color: var(--text-muted);
         }
 
         /* ========== ANIMATIONS ========== */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(32px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Scroll reveal */
         .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
         }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .reveal.is-visible {
+            opacity: 1; transform: translateY(0);
         }
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 900px) {
-            .bento-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .bento-wide { grid-column: span 2; }
+            .b-hero, .b-side { grid-column: span 12; }
+            .b-third { grid-column: span 6; }
+            .b-half { grid-column: span 6; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .step-card::after { display: none; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 640px) {
             .nav-links a:not(.nav-cta) { display: none; }
-            .bento-grid { grid-template-columns: 1fr; }
-            .bento-wide { grid-column: span 1; }
+            .bento { grid-template-columns: 1fr; }
+            .b-hero, .b-side, .b-third, .b-half { grid-column: span 1; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .steps::before { left: 32px; }
-            .footer-top { flex-direction: column; }
-            .footer-columns { gap: 32px; }
-            .footer-bottom { flex-direction: column; text-align: center; }
+            .footer-cols { gap: 40px; }
+            .footer-grid { flex-direction: column; }
         }
     </style>
 </head>
 <body>
+<div class="grain"></div>
 
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-inner">
-            <a href="index.html" class="nav-brand">
-                <div class="nav-logo">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                </div>
-                DiaBuddy
-            </a>
-            <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#how-it-works">How it works</a>
-                <a href="support.html">Support</a>
-                <a href="#" class="nav-cta">Download</a>
+<!-- Nav -->
+<nav class="nav">
+    <div class="nav-bar">
+        <a href="index.html" class="nav-brand">
+            <div class="nav-brand-mark">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-glow"></div>
-        <div class="hero-grid"></div>
-
-        <div class="hero-badge">
-            <span class="badge-dot"></span>
-            Now available on App Store
-        </div>
-
-        <h1>
-            Eat smarter with<br>
-            <span class="gradient-text">AI-powered tracking</span>
-        </h1>
-
-        <p class="subtitle">
-            The intelligent nutrition companion for people with diabetes. Scan any food with your camera and get instant analysis in seconds.
-        </p>
-
-        <div class="hero-buttons">
-            <a href="#" class="btn-primary">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                Download for iOS
-            </a>
-            <a href="#features" class="btn-secondary">
-                Learn more
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-            </a>
-        </div>
-    </section>
-
-    <!-- Trust Bar -->
-    <div class="trust-bar">
-        <p>Powered by</p>
-        <div class="trust-logos">
-            <span>OpenAI</span>
-            <span>Supabase</span>
-            <span>Expo</span>
-            <span>React Native</span>
+            DiaBuddy
+        </a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how">How it works</a>
+            <a href="support.html">Support</a>
+            <a href="#" class="nav-cta">Get the App</a>
         </div>
     </div>
+</nav>
 
-    <!-- Features Bento Grid -->
-    <section class="features" id="features">
-        <div class="section-header">
-            <div class="section-label">Features</div>
-            <h2>Everything you need<br>to manage nutrition</h2>
-            <p class="section-desc">Built specifically for people with diabetes. Smart, fast, and designed with your health in mind.</p>
-        </div>
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-orb hero-orb--teal"></div>
+    <div class="hero-orb hero-orb--amber"></div>
+    <div class="hero-orb hero-orb--violet"></div>
 
-        <div class="bento-grid">
-            <!-- AI Scanner - Wide -->
-            <div class="bento-item bento-wide">
-                <div class="bento-icon" style="background: rgba(59,130,246,0.12);">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="#3B82F6" stroke-width="2"/></svg>
-                </div>
-                <h3>AI Food Scanner</h3>
-                <p>Point your camera at any food and get instant nutritional analysis. Our AI identifies dishes, estimates portions, and calculates calories, macros, and glycemic index in seconds.</p>
-            </div>
+    <svg class="hero-curve" viewBox="0 0 1200 200" preserveAspectRatio="none">
+        <path d="M0,100 C150,40 300,160 450,80 C600,0 750,180 900,100 C1050,20 1150,140 1200,100" />
+    </svg>
 
-            <!-- Safety Alerts -->
-            <div class="bento-item">
-                <div class="bento-icon" style="background: rgba(239,68,68,0.12);">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/></svg>
-                </div>
-                <h3>Safety Alerts</h3>
-                <p>Instant warnings about foods that may be dangerous for your specific diabetes type.</p>
-            </div>
+    <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Now on the App Store
+    </div>
 
-            <!-- Statistics -->
-            <div class="bento-item">
-                <div class="bento-icon" style="background: rgba(16,185,129,0.12);">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M18 20V10M12 20V4M6 20v-6" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </div>
-                <h3>Weekly Stats</h3>
-                <p>Interactive charts showing your calorie intake and daily progress.</p>
-                <div class="mini-bars">
-                    <div class="mini-bar" style="height:45%;background:rgba(16,185,129,0.3);animation-delay:0s"></div>
-                    <div class="mini-bar" style="height:70%;background:rgba(16,185,129,0.4);animation-delay:0.1s"></div>
-                    <div class="mini-bar" style="height:55%;background:rgba(16,185,129,0.35);animation-delay:0.2s"></div>
-                    <div class="mini-bar" style="height:85%;background:rgba(16,185,129,0.5);animation-delay:0.3s"></div>
-                    <div class="mini-bar" style="height:60%;background:rgba(16,185,129,0.4);animation-delay:0.4s"></div>
-                    <div class="mini-bar" style="height:40%;background:rgba(16,185,129,0.3);animation-delay:0.5s"></div>
-                    <div class="mini-bar" style="height:75%;background:linear-gradient(to top, rgba(16,185,129,0.3), rgba(16,185,129,0.6));animation-delay:0.6s"></div>
-                </div>
-            </div>
+    <h1>Scan. Understand.<br><em>Eat&nbsp;confidently.</em></h1>
 
-            <!-- Auto Meal -->
-            <div class="bento-item">
-                <div class="bento-icon" style="background: rgba(245,158,11,0.12);">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F59E0B" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
-                </div>
-                <h3>Auto Meal Tracking</h3>
-                <p>Food is automatically sorted into breakfast, lunch, or dinner based on when you scan.</p>
-            </div>
+    <p class="hero-sub">The AI nutrition companion built for diabetes. Point your camera, get instant analysis, and know exactly what you're eating.</p>
 
-            <!-- Macros -->
-            <div class="bento-item">
-                <div class="bento-icon" style="background: rgba(139,92,246,0.12);">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </div>
-                <h3>Detailed Macros</h3>
-                <p>Track every nutrient that matters.</p>
-                <div class="macro-pills">
-                    <span class="macro-pill" style="color:#3B82F6;border-color:rgba(59,130,246,0.2);background:rgba(59,130,246,0.06);">Protein</span>
-                    <span class="macro-pill" style="color:#F59E0B;border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.06);">Carbs</span>
-                    <span class="macro-pill" style="color:#EF4444;border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.06);">Fat</span>
-                    <span class="macro-pill" style="color:#10B981;border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.06);">Fiber</span>
-                    <span class="macro-pill" style="color:#EC4899;border-color:rgba(236,72,153,0.2);background:rgba(236,72,153,0.06);">Sugar</span>
-                    <span class="macro-pill" style="color:#8B5CF6;border-color:rgba(139,92,246,0.2);background:rgba(139,92,246,0.06);">GI</span>
-                </div>
-            </div>
-
-            <!-- Privacy - Wide -->
-            <div class="bento-item bento-wide">
-                <div class="bento-icon" style="background: rgba(236,72,153,0.12);">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </div>
-                <h3>Privacy First</h3>
-                <p>Your health data is encrypted end-to-end, stored securely on Supabase infrastructure. We never sell, share, or monetize your personal information. Your data belongs to you.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="section-header">
-            <div class="section-label">How it works</div>
-            <h2>Three simple steps</h2>
-            <p class="section-desc">From scan to insight in seconds.</p>
-        </div>
-
-        <div class="steps">
-            <div class="step">
-                <div class="step-number" style="background:rgba(59,130,246,0.1);color:#3B82F6;">1</div>
-                <div class="step-content">
-                    <h3>Scan your food</h3>
-                    <p>Open the camera and point it at any meal, snack, or drink. Take a photo or pick one from your gallery. Our AI works with any food, anywhere.</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-number" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">2</div>
-                <div class="step-content">
-                    <h3>Get instant analysis</h3>
-                    <p>Within seconds, receive a complete nutritional breakdown including calories, proteins, carbs, fats, sugar, fiber, and glycemic index. Plus safety warnings for your diabetes type.</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-number" style="background:rgba(16,185,129,0.1);color:#10B981;">3</div>
-                <div class="step-content">
-                    <h3>Track your progress</h3>
-                    <p>View weekly statistics, monitor trends, and stay on top of your daily calorie and macro goals. All automatically organized by meal time.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats -->
-    <section class="stats">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Languages</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">7+</div>
-                <div class="stat-label">Diabetes Types</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">AI</div>
-                <div class="stat-label">Powered</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">24/7</div>
-                <div class="stat-label">Always On</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta-section">
-        <div class="cta-glow"></div>
-        <h2>Start tracking<br><span class="gradient-text">smarter today</span></h2>
-        <p class="subtitle">Free to download. Your health journey starts here.</p>
+    <div class="hero-actions">
         <a href="#" class="btn-primary">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
             Download for iOS
         </a>
-    </section>
+        <a href="#features" class="btn-ghost">
+            Explore features
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 7l10 10M17 7v10"/></svg>
+        </a>
+    </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-top">
-            <div>
-                <div class="footer-brand">
-                    <div class="footer-brand-logo">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    </div>
-                    DiaBuddy
-                </div>
-                <p class="footer-tagline">AI-powered nutrition tracking for people with diabetes.</p>
+<!-- Trust -->
+<div class="trust">
+    <p class="trust-label">Built with</p>
+    <div class="trust-row">
+        <span>OpenAI</span>
+        <span>Supabase</span>
+        <span>Expo</span>
+        <span>React Native</span>
+    </div>
+</div>
+
+<!-- Features Bento -->
+<section class="section" id="features">
+    <div class="section-header">
+        <div class="section-eyebrow">Features</div>
+        <h2 class="section-title">Intelligence meets<br>nutrition tracking</h2>
+        <p class="section-desc">Every feature designed to give you confidence in what you eat — and peace of mind about your health.</p>
+    </div>
+
+    <div class="bento">
+        <!-- AI Scanner — hero card -->
+        <div class="bento-card b-hero reveal">
+            <div class="bento-icon" style="background: var(--teal-dim)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="var(--teal)" stroke-width="2"/></svg>
             </div>
-            <div class="footer-columns">
-                <div class="footer-col">
-                    <h4>Product</h4>
-                    <a href="#features">Features</a>
-                    <a href="#how-it-works">How it works</a>
-                    <a href="#">Download</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Legal</h4>
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="support.html">Support</a>
-                    <a href="mailto:dia.buddy2026@mail.ru">Contact</a>
-                </div>
+            <h3>AI Food Scanner</h3>
+            <p>Point your camera at any food — a home-cooked meal, restaurant dish, or packaged snack. Our AI identifies what you're eating, estimates portions, and returns a complete nutritional breakdown in seconds.</p>
+            <div class="scan-lines">
+                <div class="scan-line"></div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 DiaBuddy. All rights reserved.</p>
-            <p>Made with care for the diabetes community.</p>
+
+        <!-- Safety Alerts -->
+        <div class="bento-card b-side reveal">
+            <div class="bento-icon" style="background: var(--rose-dim)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="0.5" fill="var(--rose)"/></svg>
+            </div>
+            <h3>Safety Alerts</h3>
+            <p>Instant warnings for foods that may spike glucose or pose risks for your specific diabetes type. Color-coded: safe, caution, dangerous.</p>
         </div>
-    </footer>
 
-    <!-- Scroll Reveal Script (minimal) -->
-    <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.bento-item, .step, .stat-card').forEach(el => {
-            el.classList.add('reveal');
-            observer.observe(el);
-        });
-    </script>
+        <!-- Stats -->
+        <div class="bento-card b-third reveal">
+            <div class="bento-icon" style="background: rgba(45,212,191,0.08)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 20V10M12 20V4M6 20v-6" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Weekly Stats</h3>
+            <p>Tap any bar to see the day's macros.</p>
+            <div class="viz-bars">
+                <div class="viz-bar" style="height:40%;background:rgba(45,212,191,0.25);animation-delay:0.1s"></div>
+                <div class="viz-bar" style="height:65%;background:rgba(45,212,191,0.35);animation-delay:0.2s"></div>
+                <div class="viz-bar" style="height:50%;background:rgba(45,212,191,0.3);animation-delay:0.3s"></div>
+                <div class="viz-bar" style="height:85%;background:rgba(45,212,191,0.5);animation-delay:0.4s"></div>
+                <div class="viz-bar" style="height:55%;background:rgba(45,212,191,0.35);animation-delay:0.5s"></div>
+                <div class="viz-bar" style="height:35%;background:rgba(45,212,191,0.2);animation-delay:0.6s"></div>
+                <div class="viz-bar" style="height:72%;background:linear-gradient(to top,rgba(45,212,191,0.3),rgba(45,212,191,0.55));animation-delay:0.7s"></div>
+            </div>
+        </div>
 
+        <!-- Auto Meal -->
+        <div class="bento-card b-third reveal">
+            <div class="bento-icon" style="background: var(--amber-dim)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--amber)" stroke-width="2"/><path d="M12 6v6l4 2" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <h3>Auto Meal Sorting</h3>
+            <p>Scanned food is auto-categorized into breakfast, lunch, dinner, or snack based on time of day.</p>
+        </div>
+
+        <!-- Macros -->
+        <div class="bento-card b-third reveal">
+            <div class="bento-icon" style="background: var(--violet-dim)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Full Macro Breakdown</h3>
+            <p>Every nutrient that matters, at a glance.</p>
+            <div class="macro-tags">
+                <span class="macro-tag" style="color:var(--teal);background:var(--teal-dim)">Protein</span>
+                <span class="macro-tag" style="color:var(--amber);background:var(--amber-dim)">Carbs</span>
+                <span class="macro-tag" style="color:var(--rose);background:var(--rose-dim)">Fat</span>
+                <span class="macro-tag" style="color:#34d399;background:rgba(52,211,153,0.1)">Fiber</span>
+                <span class="macro-tag" style="color:#f472b6;background:rgba(244,114,182,0.08)">Sugar</span>
+                <span class="macro-tag" style="color:var(--violet);background:var(--violet-dim)">GI</span>
+            </div>
+        </div>
+
+        <!-- Privacy — wide -->
+        <div class="bento-card b-half reveal">
+            <div class="bento-icon" style="background: rgba(244,114,182,0.08)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Privacy First</h3>
+            <p>End-to-end encrypted storage on Supabase. Food photos are analyzed and discarded — never stored by AI services. We don't sell, share, or monetize your health data. Ever.</p>
+        </div>
+
+        <!-- Languages -->
+        <div class="bento-card b-half reveal">
+            <div class="bento-icon" style="background: rgba(96,165,250,0.1)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#60a5fa" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="#60a5fa" stroke-width="2"/></svg>
+            </div>
+            <h3>Multilingual</h3>
+            <p>Full support for English, Russian, and Uzbek. Interface, AI analysis, and safety alerts — all in your preferred language. Covering 7+ diabetes types with personalized guidance.</p>
+        </div>
+    </div>
+</section>
+
+<!-- How it Works -->
+<section class="section" id="how">
+    <div class="section-header">
+        <div class="section-eyebrow">How it works</div>
+        <h2 class="section-title">Three steps to<br>smarter eating</h2>
+        <p class="section-desc">From camera to insight in under five seconds.</p>
+    </div>
+
+    <div class="steps-grid">
+        <div class="step-card reveal">
+            <div class="step-num" style="color: rgba(45,212,191,0.15)">01</div>
+            <h3>Scan your food</h3>
+            <p>Open the camera, point at any meal or snack. Snap a photo, or pick one from your gallery. Works with any cuisine, anywhere.</p>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num" style="color: rgba(167,139,250,0.15)">02</div>
+            <h3>Get instant analysis</h3>
+            <p>AI returns calories, all macros, glycemic index, and a safety rating for your diabetes type — in seconds.</p>
+        </div>
+        <div class="step-card reveal">
+            <div class="step-num" style="color: rgba(251,191,36,0.12)">03</div>
+            <h3>Track your progress</h3>
+            <p>View weekly charts, monitor macro trends, and stay on top of your daily goals. All organized by meal automatically.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="section">
+    <div class="stats-grid">
+        <div class="stat-card reveal">
+            <div class="stat-val" style="color: var(--teal)">3</div>
+            <div class="stat-label">Languages</div>
+        </div>
+        <div class="stat-card reveal">
+            <div class="stat-val" style="color: var(--amber)">7+</div>
+            <div class="stat-label">Diabetes Types</div>
+        </div>
+        <div class="stat-card reveal">
+            <div class="stat-val" style="color: var(--violet)">AI</div>
+            <div class="stat-label">Powered</div>
+        </div>
+        <div class="stat-card reveal">
+            <div class="stat-val" style="color: var(--rose)">24/7</div>
+            <div class="stat-label">Always On</div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="cta-orb"></div>
+    <div class="section-eyebrow" style="justify-content:center; margin-bottom: 20px;">Get started</div>
+    <h2 class="section-title" style="margin-bottom: 16px;">Take control of<br>what you eat</h2>
+    <p class="section-desc">Free to download. Your smarter health journey starts now.</p>
+    <a href="#" class="btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Download for iOS
+    </a>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div>
+            <div class="footer-brand">
+                <div class="footer-brand-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                DiaBuddy
+            </div>
+            <p class="footer-tagline">AI nutrition tracking for people with diabetes. Scan, understand, eat better.</p>
+        </div>
+        <div class="footer-cols">
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="#features">Features</a>
+                <a href="#how">How it works</a>
+                <a href="#">Download</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="support.html">Support</a>
+                <a href="mailto:dia.buddy2026@mail.ru">Contact</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 DiaBuddy. All rights reserved.</p>
+        <p>Made for the diabetes community.</p>
+    </div>
+</footer>
+
+<script>
+const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+            e.target.style.transitionDelay = `${i * 60}ms`;
+            e.target.classList.add('is-visible');
+            io.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
 </body>
 </html>
