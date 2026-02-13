@@ -4,14 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DiaBuddy - AI Food Tracker for Diabetes</title>
+    <meta name="description" content="AI-powered nutrition tracking for people with diabetes. Scan food with your camera, get instant analysis, and manage your health.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0A0A0F; color: #FFFFFF; overflow-x: hidden; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Hero */
+        :root {
+            --bg: #06060b;
+            --bg-secondary: #0c0c14;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text: #ffffff;
+            --text-secondary: rgba(255,255,255,0.6);
+            --text-tertiary: rgba(255,255,255,0.4);
+            --blue: #3B82F6;
+            --blue-glow: rgba(59,130,246,0.4);
+            --green: #10B981;
+            --purple: #8B5CF6;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========== NOISE GRAIN OVERLAY ========== */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ========== NAVIGATION ========== */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 16px 24px;
+            transition: backdrop-filter 0.3s;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px 20px;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+        }
+        .nav-logo {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--blue), #2563EB);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .nav-links {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--text);
+            background: rgba(255,255,255,0.06);
+        }
+        .nav-cta {
+            background: var(--text) !important;
+            color: var(--bg) !important;
+            font-weight: 600 !important;
+        }
+        .nav-cta:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        /* ========== HERO ========== */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -19,294 +116,831 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 40px 24px;
+            padding: 120px 24px 80px;
             position: relative;
             overflow: hidden;
         }
-        .hero::before {
-            content: '';
+
+        /* Mesh gradient background */
+        .hero-glow {
             position: absolute;
-            top: -40%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            background: radial-gradient(ellipse at 50% 30%, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0.05) 40%, transparent 70%);
+            top: -30%; left: -20%;
+            width: 140%; height: 140%;
             pointer-events: none;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -20%;
-            right: -20%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(ellipse at center, rgba(16,185,129,0.08) 0%, transparent 60%);
-            pointer-events: none;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(59,130,246,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 30%, rgba(139,92,246,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(16,185,129,0.08) 0%, transparent 50%);
         }
 
-        .logo {
-            width: 88px;
-            height: 88px;
-            background: linear-gradient(135deg, #3B82F6, #2563EB);
-            border-radius: 22px;
-            display: flex;
+        /* Dot grid */
+        .hero-grid {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+            background-size: 32px 32px;
+            -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
+            mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
+        }
+
+        /* Badge */
+        .hero-badge {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            font-size: 40px;
+            gap: 8px;
+            padding: 6px 16px 6px 8px;
+            background: rgba(59,130,246,0.08);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #60A5FA;
             margin-bottom: 32px;
-            box-shadow: 0 20px 60px rgba(59,130,246,0.3);
             position: relative;
             z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
         }
+        .badge-dot {
+            width: 8px; height: 8px;
+            background: var(--blue);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
         .hero h1 {
-            font-size: clamp(40px, 7vw, 64px);
+            font-size: clamp(44px, 8vw, 80px);
             font-weight: 800;
-            letter-spacing: -2px;
-            line-height: 1.05;
-            margin-bottom: 16px;
+            letter-spacing: -3px;
+            line-height: 1;
+            margin-bottom: 24px;
             position: relative;
             z-index: 1;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
         }
-        .hero h1 span {
-            background: linear-gradient(135deg, #3B82F6, #60A5FA, #10B981);
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #3B82F6 50%, #10B981 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .hero .subtitle {
             font-size: clamp(16px, 2.5vw, 20px);
-            color: #9CA3AF;
-            max-width: 480px;
-            line-height: 1.6;
-            margin-bottom: 40px;
+            color: var(--text-secondary);
+            max-width: 520px;
+            line-height: 1.7;
+            margin-bottom: 48px;
             position: relative;
             z-index: 1;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
         }
-        .app-store-btn {
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        /* Primary CTA */
+        .btn-primary {
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            background: #FFFFFF;
+            background: #ffffff;
             color: #0A0A0F;
-            padding: 14px 32px;
+            padding: 16px 32px;
             border-radius: 14px;
             text-decoration: none;
             font-weight: 600;
             font-size: 16px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59,130,246,0.15), transparent);
+            transition: left 0.5s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(255,255,255,0.15), 0 0 40px rgba(59,130,246,0.2);
+        }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary svg { width: 22px; height: 22px; }
+
+        /* Secondary CTA */
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 16px 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            color: var(--text);
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* ========== LOGOS / TRUST BAR ========== */
+        .trust-bar {
+            padding: 60px 24px 20px;
+            text-align: center;
             position: relative;
             z-index: 1;
+            animation: fadeInUp 0.8s ease-out 0.5s both;
         }
-        .app-store-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(255,255,255,0.15);
+        .trust-bar p {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
         }
-        .app-store-btn svg { width: 24px; height: 24px; }
-
-        /* Features */
-        .features {
-            padding: 80px 24px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .features h2 {
-            text-align: center;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 48px;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        .feature-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 28px;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .feature-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(59,130,246,0.3);
-        }
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+        .trust-logos {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            gap: 40px;
+            flex-wrap: wrap;
+            opacity: 0.4;
+        }
+        .trust-logos span {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+        }
+
+        /* ========== BENTO FEATURES ========== */
+        .features {
+            padding: 120px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--blue);
             margin-bottom: 16px;
         }
-        .feature-card h3 {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 8px;
+        .section-label::before {
+            content: '';
+            width: 24px; height: 1px;
+            background: var(--blue);
         }
-        .feature-card p {
-            font-size: 14px;
-            color: #9CA3AF;
+        .features .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        .features h2 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+        .features .section-desc {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
             line-height: 1.6;
         }
 
-        /* Stats */
-        .stats {
-            padding: 60px 24px;
-            max-width: 800px;
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .bento-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .bento-item:hover {
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.04);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(59,130,246,0.06);
+        }
+        .bento-item:hover::before { opacity: 1; }
+
+        .bento-wide { grid-column: span 2; }
+        .bento-tall { grid-row: span 2; }
+
+        .bento-icon {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .bento-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 20px;
+            background: inherit;
+            opacity: 0.15;
+            filter: blur(12px);
+        }
+        .bento-item h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .bento-item p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Feature visual elements */
+        .bento-visual {
+            margin-top: 24px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated bars for stats bento */
+        .mini-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 80px;
+            margin-top: 24px;
+        }
+        .mini-bar {
+            flex: 1;
+            border-radius: 6px;
+            animation: barGrow 1.5s ease-out forwards;
+            transform-origin: bottom;
+        }
+        @keyframes barGrow {
+            from { transform: scaleY(0); }
+            to { transform: scaleY(1); }
+        }
+
+        /* Macro pills for macros bento */
+        .macro-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .macro-pill {
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid;
+        }
+
+        /* ========== HOW IT WORKS ========== */
+        .how-it-works {
+            padding: 120px 24px;
+            max-width: 900px;
             margin: 0 auto;
         }
-        .stats-row {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            flex-wrap: wrap;
-        }
-        .stat {
+        .how-it-works .section-header {
             text-align: center;
+            margin-bottom: 80px;
         }
-        .stat .number {
-            font-size: 40px;
+        .how-it-works h2 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+        }
+        .how-it-works .section-desc {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+        .steps::before {
+            content: '';
+            position: absolute;
+            left: 32px;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--blue), var(--purple), var(--green));
+            opacity: 0.3;
+        }
+        .step {
+            display: flex;
+            gap: 32px;
+            padding: 40px 0;
+            position: relative;
+        }
+        .step-number {
+            width: 64px; height: 64px;
+            min-width: 64px;
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
             font-weight: 800;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #3B82F6, #10B981);
+            position: relative;
+            z-index: 1;
+        }
+        .step-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .step-content p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ========== STATS ========== */
+        .stats {
+            padding: 80px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 40px 24px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            transition: all 0.3s;
+        }
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.04);
+            transform: translateY(-2px);
+        }
+        .stat-number {
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 800;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--blue), var(--green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
         }
-        .stat .label {
+        .stat-label {
             font-size: 14px;
-            color: #6B7280;
-            margin-top: 4px;
+            color: var(--text-tertiary);
+            font-weight: 500;
         }
 
-        /* Footer */
-        .footer {
-            border-top: 1px solid rgba(255,255,255,0.06);
-            padding: 40px 24px;
+        /* ========== CTA SECTION ========== */
+        .cta-section {
+            padding: 120px 24px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .footer-links {
+        .cta-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 400px;
+            background: radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .cta-section h2 {
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.1;
+        }
+        .cta-section .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-section .btn-primary {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 60px 24px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-top {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
             gap: 32px;
-            margin-bottom: 20px;
+        }
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+        .footer-brand-logo {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--blue), #2563EB);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .footer-tagline {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            max-width: 280px;
+            line-height: 1.6;
+        }
+        .footer-columns {
+            display: flex;
+            gap: 64px;
             flex-wrap: wrap;
         }
-        .footer-links a {
-            color: #9CA3AF;
+        .footer-col h4 {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        .footer-col a {
+            display: block;
+            color: var(--text-tertiary);
             text-decoration: none;
             font-size: 14px;
-            font-weight: 500;
+            padding: 4px 0;
             transition: color 0.2s;
         }
-        .footer-links a:hover { color: #3B82F6; }
-        .footer p {
-            color: #4B5563;
+        .footer-col a:hover { color: var(--text); }
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-bottom p {
             font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .bento-wide { grid-column: span 2; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .nav-links a:not(.nav-cta) { display: none; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-wide { grid-column: span 1; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps::before { left: 32px; }
+            .footer-top { flex-direction: column; }
+            .footer-columns { gap: 32px; }
+            .footer-bottom { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <div class="nav-logo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                DiaBuddy
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="support.html">Support</a>
+                <a href="#" class="nav-cta">Download</a>
+            </div>
+        </div>
+    </nav>
+
     <!-- Hero -->
     <section class="hero">
-        <div class="logo">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="white"/>
-            </svg>
+        <div class="hero-glow"></div>
+        <div class="hero-grid"></div>
+
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Now available on App Store
         </div>
-        <h1><span>DiaBuddy</span></h1>
-        <p class="subtitle">AI-powered nutrition tracking for people with diabetes. Scan food, track macros, stay healthy.</p>
-        <a href="#" class="app-store-btn">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            Download on App Store
-        </a>
+
+        <h1>
+            Eat smarter with<br>
+            <span class="gradient-text">AI-powered tracking</span>
+        </h1>
+
+        <p class="subtitle">
+            The intelligent nutrition companion for people with diabetes. Scan any food with your camera and get instant analysis in seconds.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="#" class="btn-primary">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                Download for iOS
+            </a>
+            <a href="#features" class="btn-secondary">
+                Learn more
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </a>
+        </div>
     </section>
 
-    <!-- Features -->
-    <section class="features">
-        <h2>Smart Features</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(59,130,246,0.12);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="#3B82F6" stroke-width="2"/></svg>
+    <!-- Trust Bar -->
+    <div class="trust-bar">
+        <p>Powered by</p>
+        <div class="trust-logos">
+            <span>OpenAI</span>
+            <span>Supabase</span>
+            <span>Expo</span>
+            <span>React Native</span>
+        </div>
+    </div>
+
+    <!-- Features Bento Grid -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <div class="section-label">Features</div>
+            <h2>Everything you need<br>to manage nutrition</h2>
+            <p class="section-desc">Built specifically for people with diabetes. Smart, fast, and designed with your health in mind.</p>
+        </div>
+
+        <div class="bento-grid">
+            <!-- AI Scanner - Wide -->
+            <div class="bento-item bento-wide">
+                <div class="bento-icon" style="background: rgba(59,130,246,0.12);">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="#3B82F6" stroke-width="2"/></svg>
                 </div>
                 <h3>AI Food Scanner</h3>
-                <p>Point your camera at any food and get instant nutritional analysis powered by artificial intelligence.</p>
+                <p>Point your camera at any food and get instant nutritional analysis. Our AI identifies dishes, estimates portions, and calculates calories, macros, and glycemic index in seconds.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(239,68,68,0.12);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22c1-3 6-5.5 6-11a6 6 0 10-12 0c0 5.5 5 8 6 11z" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="11" r="2" stroke="#EF4444" stroke-width="2"/></svg>
+
+            <!-- Safety Alerts -->
+            <div class="bento-item">
+                <div class="bento-icon" style="background: rgba(239,68,68,0.12);">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/></svg>
                 </div>
-                <h3>Diabetes Safety Alerts</h3>
-                <p>Get instant warnings about foods that may be dangerous for your diabetes type. Stay safe with every meal.</p>
+                <h3>Safety Alerts</h3>
+                <p>Instant warnings about foods that may be dangerous for your specific diabetes type.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(16,185,129,0.12);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 20V10M12 20V4M6 20v-6" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+            <!-- Statistics -->
+            <div class="bento-item">
+                <div class="bento-icon" style="background: rgba(16,185,129,0.12);">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M18 20V10M12 20V4M6 20v-6" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
-                <h3>Weekly Statistics</h3>
-                <p>Interactive charts showing your calorie intake, macronutrients, and progress towards daily goals.</p>
+                <h3>Weekly Stats</h3>
+                <p>Interactive charts showing your calorie intake and daily progress.</p>
+                <div class="mini-bars">
+                    <div class="mini-bar" style="height:45%;background:rgba(16,185,129,0.3);animation-delay:0s"></div>
+                    <div class="mini-bar" style="height:70%;background:rgba(16,185,129,0.4);animation-delay:0.1s"></div>
+                    <div class="mini-bar" style="height:55%;background:rgba(16,185,129,0.35);animation-delay:0.2s"></div>
+                    <div class="mini-bar" style="height:85%;background:rgba(16,185,129,0.5);animation-delay:0.3s"></div>
+                    <div class="mini-bar" style="height:60%;background:rgba(16,185,129,0.4);animation-delay:0.4s"></div>
+                    <div class="mini-bar" style="height:40%;background:rgba(16,185,129,0.3);animation-delay:0.5s"></div>
+                    <div class="mini-bar" style="height:75%;background:linear-gradient(to top, rgba(16,185,129,0.3), rgba(16,185,129,0.6));animation-delay:0.6s"></div>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(245,158,11,0.12);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F59E0B" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
+
+            <!-- Auto Meal -->
+            <div class="bento-item">
+                <div class="bento-icon" style="background: rgba(245,158,11,0.12);">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F59E0B" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
                 </div>
                 <h3>Auto Meal Tracking</h3>
-                <p>Scanned food is automatically categorized into breakfast, lunch, or dinner based on the time of day.</p>
+                <p>Food is automatically sorted into breakfast, lunch, or dinner based on when you scan.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(139,92,246,0.12);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+            <!-- Macros -->
+            <div class="bento-item">
+                <div class="bento-icon" style="background: rgba(139,92,246,0.12);">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
                 <h3>Detailed Macros</h3>
-                <p>Track proteins, carbs, fats, sugar, fiber, and glycemic index for every food you eat.</p>
+                <p>Track every nutrient that matters.</p>
+                <div class="macro-pills">
+                    <span class="macro-pill" style="color:#3B82F6;border-color:rgba(59,130,246,0.2);background:rgba(59,130,246,0.06);">Protein</span>
+                    <span class="macro-pill" style="color:#F59E0B;border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.06);">Carbs</span>
+                    <span class="macro-pill" style="color:#EF4444;border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.06);">Fat</span>
+                    <span class="macro-pill" style="color:#10B981;border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.06);">Fiber</span>
+                    <span class="macro-pill" style="color:#EC4899;border-color:rgba(236,72,153,0.2);background:rgba(236,72,153,0.06);">Sugar</span>
+                    <span class="macro-pill" style="color:#8B5CF6;border-color:rgba(139,92,246,0.2);background:rgba(139,92,246,0.06);">GI</span>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(236,72,153,0.12);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+            <!-- Privacy - Wide -->
+            <div class="bento-item bento-wide">
+                <div class="bento-icon" style="background: rgba(236,72,153,0.12);">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
                 <h3>Privacy First</h3>
-                <p>Your health data is encrypted and secure. We never sell your personal information to third parties.</p>
+                <p>Your health data is encrypted end-to-end, stored securely on Supabase infrastructure. We never sell, share, or monetize your personal information. Your data belongs to you.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <div class="section-label">How it works</div>
+            <h2>Three simple steps</h2>
+            <p class="section-desc">From scan to insight in seconds.</p>
+        </div>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-number" style="background:rgba(59,130,246,0.1);color:#3B82F6;">1</div>
+                <div class="step-content">
+                    <h3>Scan your food</h3>
+                    <p>Open the camera and point it at any meal, snack, or drink. Take a photo or pick one from your gallery. Our AI works with any food, anywhere.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">2</div>
+                <div class="step-content">
+                    <h3>Get instant analysis</h3>
+                    <p>Within seconds, receive a complete nutritional breakdown including calories, proteins, carbs, fats, sugar, fiber, and glycemic index. Plus safety warnings for your diabetes type.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number" style="background:rgba(16,185,129,0.1);color:#10B981;">3</div>
+                <div class="step-content">
+                    <h3>Track your progress</h3>
+                    <p>View weekly statistics, monitor trends, and stay on top of your daily calorie and macro goals. All automatically organized by meal time.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Stats -->
     <section class="stats">
-        <div class="stats-row">
-            <div class="stat">
-                <div class="number">3</div>
-                <div class="label">Languages</div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Languages</div>
             </div>
-            <div class="stat">
-                <div class="number">7+</div>
-                <div class="label">Diabetes Types</div>
+            <div class="stat-card">
+                <div class="stat-number">7+</div>
+                <div class="stat-label">Diabetes Types</div>
             </div>
-            <div class="stat">
-                <div class="number">AI</div>
-                <div class="label">Powered Analysis</div>
+            <div class="stat-card">
+                <div class="stat-number">AI</div>
+                <div class="stat-label">Powered</div>
             </div>
-            <div class="stat">
-                <div class="number">24/7</div>
-                <div class="label">Tracking</div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Always On</div>
             </div>
         </div>
     </section>
 
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-glow"></div>
+        <h2>Start tracking<br><span class="gradient-text">smarter today</span></h2>
+        <p class="subtitle">Free to download. Your health journey starts here.</p>
+        <a href="#" class="btn-primary">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Download for iOS
+        </a>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="support.html">Support</a>
-            <a href="mailto:dia.buddy2026@mail.ru">Contact</a>
+        <div class="footer-top">
+            <div>
+                <div class="footer-brand">
+                    <div class="footer-brand-logo">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    DiaBuddy
+                </div>
+                <p class="footer-tagline">AI-powered nutrition tracking for people with diabetes.</p>
+            </div>
+            <div class="footer-columns">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How it works</a>
+                    <a href="#">Download</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="support.html">Support</a>
+                    <a href="mailto:dia.buddy2026@mail.ru">Contact</a>
+                </div>
+            </div>
         </div>
-        <p>&copy; 2026 DiaBuddy. All rights reserved.</p>
+        <div class="footer-bottom">
+            <p>&copy; 2026 DiaBuddy. All rights reserved.</p>
+            <p>Made with care for the diabetes community.</p>
+        </div>
     </footer>
+
+    <!-- Scroll Reveal Script (minimal) -->
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.bento-item, .step, .stat-card').forEach(el => {
+            el.classList.add('reveal');
+            observer.observe(el);
+        });
+    </script>
 
 </body>
 </html>
