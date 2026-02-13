@@ -81,10 +81,13 @@
         }
         .nav-logo {
             width: 34px; height: 34px;
-            background: linear-gradient(135deg, var(--accent), #00b894);
             border-radius: 10px;
-            display: grid; place-items: center;
-            box-shadow: 0 0 20px rgba(0,224,184,0.2);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .nav-logo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
         }
         .nav-links { display: flex; align-items: center; gap: 2px; }
         .nav-links a {
@@ -101,6 +104,34 @@
             border-radius: 100px !important;
         }
         .nav-cta:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Language switcher */
+        .lang-switch {
+            display: flex; align-items: center; gap: 2px;
+            margin-right: 4px;
+            padding: 4px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 100px;
+            border: 1px solid var(--border);
+        }
+        .lang-btn {
+            padding: 5px 10px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: all 0.3s var(--ease);
+            letter-spacing: 0.02em;
+            font-family: var(--sans);
+        }
+        .lang-btn:hover { color: var(--text); }
+        .lang-btn.active {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+        }
 
         /* ===== HERO ===== */
         .hero {
@@ -722,16 +753,19 @@
 <nav class="nav" id="nav">
     <div class="nav-inner">
         <a href="index.html" class="nav-brand">
-            <div class="nav-logo">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-            </div>
+            <div class="nav-logo"><img src="icon.png" alt="DiaBuddy"></div>
             DiaBuddy
         </a>
         <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="#how">How it works</a>
-            <a href="support.html">Support</a>
-            <a href="#" class="nav-cta">Get the App</a>
+            <a href="#features" data-i18n="nav_features">Features</a>
+            <a href="#how" data-i18n="nav_how">How it works</a>
+            <a href="support.html" data-i18n="nav_support">Support</a>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="uz">UZ</button>
+            </div>
+            <a href="#" class="nav-cta" data-i18n="nav_cta">Get the App</a>
         </div>
     </div>
 </nav>
@@ -743,20 +777,20 @@
 
     <div class="hero-pill">
         <span class="hero-pill-dot"></span>
-        Now available on the App Store
+        <span data-i18n="hero_badge">Now available on the App Store</span>
     </div>
 
-    <h1>Scan your food,<br><em>know your numbers.</em></h1>
+    <h1 data-i18n="hero_title">Scan your food,<br><em>know your numbers.</em></h1>
 
-    <p class="hero-desc">The AI nutrition companion purpose-built for diabetes. Point your camera at any meal, get instant macro analysis, safety alerts, and glycemic ratings.</p>
+    <p class="hero-desc" data-i18n="hero_desc">The AI nutrition companion purpose-built for diabetes. Point your camera at any meal, get instant macro analysis, safety alerts, and glycemic ratings.</p>
 
     <div class="hero-actions">
         <a href="#" class="btn-primary">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            Download for iOS
+            <span data-i18n="hero_download">Download for iOS</span>
         </a>
         <a href="#features" class="btn-outline">
-            Explore features
+            <span data-i18n="hero_explore">Explore features</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </a>
     </div>
@@ -820,7 +854,7 @@
 
 <!-- Trust Bar -->
 <div class="trust-bar" id="trust">
-    <p class="trust-label">Built with</p>
+    <p class="trust-label" data-i18n="trust_label">Built with</p>
     <div class="trust-logos">
         <span>OpenAI</span>
         <span>Supabase</span>
@@ -832,9 +866,9 @@
 <!-- Features -->
 <section class="section" id="features">
     <div class="section-center">
-        <div class="section-label">Features</div>
-        <h2 class="section-heading">Intelligence meets<br><em>nutrition tracking</em></h2>
-        <p class="section-sub">Every feature designed to give you confidence in what you eat and peace of mind about your health.</p>
+        <div class="section-label" data-i18n="feat_label">Features</div>
+        <h2 class="section-heading" data-i18n="feat_title">Intelligence meets<br><em>nutrition tracking</em></h2>
+        <p class="section-sub" data-i18n="feat_sub">Every feature designed to give you confidence in what you eat and peace of mind about your health.</p>
     </div>
 
     <div class="bento">
@@ -843,8 +877,8 @@
             <div class="bento-icon" style="background:var(--accent-dim)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="var(--accent)" stroke-width="2"/></svg>
             </div>
-            <h3>AI Food Scanner</h3>
-            <p>Point your camera at any food — a home-cooked meal, restaurant dish, or packaged snack. Our AI identifies what you're eating, estimates portions, and returns a full nutritional breakdown in seconds.</p>
+            <h3 data-i18n="feat_scanner_title">AI Food Scanner</h3>
+            <p data-i18n="feat_scanner_desc">Point your camera at any food — a home-cooked meal, restaurant dish, or packaged snack. Our AI identifies what you're eating, estimates portions, and returns a full nutritional breakdown in seconds.</p>
             <div class="scanner-vis">
                 <div class="scanner-crosshair">
                     <span></span><span></span><span></span><span></span>
@@ -859,8 +893,8 @@
             <div class="bento-icon" style="background:var(--warn-dim)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="var(--warn)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="0.5" fill="var(--warn)"/></svg>
             </div>
-            <h3>Diabetes Safety Alerts</h3>
-            <p>Instant warnings for foods that may spike glucose or pose risks for your specific diabetes type.</p>
+            <h3 data-i18n="feat_alerts_title">Diabetes Safety Alerts</h3>
+            <p data-i18n="feat_alerts_desc">Instant warnings for foods that may spike glucose or pose risks for your specific diabetes type.</p>
             <div class="alert-viz">
                 <div class="alert-item" style="background:rgba(0,224,184,0.04);color:var(--accent)">
                     <span class="alert-dot" style="background:var(--accent)"></span>
@@ -882,8 +916,8 @@
             <div class="bento-icon" style="background:var(--accent-dim)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 20V10M12 20V4M6 20v-6" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/></svg>
             </div>
-            <h3>Weekly Statistics</h3>
-            <p>Interactive charts for calories and macros.</p>
+            <h3 data-i18n="feat_stats_title">Weekly Statistics</h3>
+            <p data-i18n="feat_stats_desc">Interactive charts for calories and macros.</p>
             <div class="chart-vis" id="chart-bars">
                 <div class="chart-bar" style="height:35%;background:rgba(0,224,184,0.2)"></div>
                 <div class="chart-bar" style="height:60%;background:rgba(0,224,184,0.3)"></div>
@@ -900,8 +934,8 @@
             <div class="bento-icon" style="background:var(--gold-dim)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--gold)" stroke-width="2"/><path d="M12 6v6l4 2" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/></svg>
             </div>
-            <h3>Auto Meal Sorting</h3>
-            <p>Scanned food is auto-categorized into breakfast, lunch, dinner, or snack based on time of day.</p>
+            <h3 data-i18n="feat_meal_title">Auto Meal Sorting</h3>
+            <p data-i18n="feat_meal_desc">Scanned food is auto-categorized into breakfast, lunch, dinner, or snack based on time of day.</p>
         </div>
 
         <!-- Macros -->
@@ -909,8 +943,8 @@
             <div class="bento-icon" style="background:var(--blue-dim)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
-            <h3>Full Macro Breakdown</h3>
-            <p>Every nutrient, at a glance.</p>
+            <h3 data-i18n="feat_macro_title">Full Macro Breakdown</h3>
+            <p data-i18n="feat_macro_desc">Every nutrient, at a glance.</p>
             <div class="macro-pills">
                 <span class="macro-pill" style="color:var(--accent);background:var(--accent-dim);border-color:rgba(0,224,184,0.12)">Protein</span>
                 <span class="macro-pill" style="color:var(--gold);background:var(--gold-dim);border-color:rgba(255,200,87,0.12)">Carbs</span>
@@ -926,8 +960,8 @@
             <div class="bento-icon" style="background:rgba(244,114,182,0.06)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
-            <h3>Privacy First</h3>
-            <p>Encrypted storage on Supabase. Food photos are analyzed and discarded — never stored by AI services. We never sell or monetize your health data.</p>
+            <h3 data-i18n="feat_privacy_title">Privacy First</h3>
+            <p data-i18n="feat_privacy_desc">Encrypted storage on Supabase. Food photos are analyzed and discarded — never stored by AI services. We never sell or monetize your health data.</p>
         </div>
 
         <!-- Languages -->
@@ -935,8 +969,8 @@
             <div class="bento-icon" style="background:var(--blue-dim)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--blue)" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="var(--blue)" stroke-width="2"/></svg>
             </div>
-            <h3>Multilingual</h3>
-            <p>Full support for English, Russian, and Uzbek. Interface, AI analysis, and safety alerts — all in your language. Covering 7+ diabetes types with personalized guidance.</p>
+            <h3 data-i18n="feat_lang_title">Multilingual</h3>
+            <p data-i18n="feat_lang_desc">Full support for English, Russian, and Uzbek. Interface, AI analysis, and safety alerts — all in your language. Covering 7+ diabetes types with personalized guidance.</p>
         </div>
     </div>
 </section>
@@ -944,26 +978,26 @@
 <!-- How it Works -->
 <section class="section" id="how">
     <div class="section-center">
-        <div class="section-label">How it works</div>
-        <h2 class="section-heading">Three steps to<br><em>smarter eating</em></h2>
-        <p class="section-sub">From camera to insight in under five seconds.</p>
+        <div class="section-label" data-i18n="how_label">How it works</div>
+        <h2 class="section-heading" data-i18n="how_title">Three steps to<br><em>smarter eating</em></h2>
+        <p class="section-sub" data-i18n="how_sub">From camera to insight in under five seconds.</p>
     </div>
 
     <div class="steps">
         <div class="step" data-gsap="step">
             <div class="step-number">01</div>
-            <h3>Scan your food</h3>
-            <p>Open the camera, point at any meal or snack. Snap a photo, or pick from your gallery. Works with any cuisine.</p>
+            <h3 data-i18n="step1_title">Scan your food</h3>
+            <p data-i18n="step1_desc">Open the camera, point at any meal or snack. Snap a photo, or pick from your gallery. Works with any cuisine.</p>
         </div>
         <div class="step" data-gsap="step">
             <div class="step-number">02</div>
-            <h3>Get instant analysis</h3>
-            <p>AI returns calories, all macros, glycemic index, and a safety rating for your diabetes type — in seconds.</p>
+            <h3 data-i18n="step2_title">Get instant analysis</h3>
+            <p data-i18n="step2_desc">AI returns calories, all macros, glycemic index, and a safety rating for your diabetes type — in seconds.</p>
         </div>
         <div class="step" data-gsap="step">
             <div class="step-number">03</div>
-            <h3>Track your progress</h3>
-            <p>View weekly charts, monitor trends, and stay on top of your daily goals. Organized by meal automatically.</p>
+            <h3 data-i18n="step3_title">Track your progress</h3>
+            <p data-i18n="step3_desc">View weekly charts, monitor trends, and stay on top of your daily goals. Organized by meal automatically.</p>
         </div>
     </div>
 </section>
@@ -973,19 +1007,19 @@
     <div class="stats-inner">
         <div class="stat">
             <div class="stat-num" style="color:var(--accent)" data-count="3">0</div>
-            <div class="stat-text">Languages</div>
+            <div class="stat-text" data-i18n="stat_lang">Languages</div>
         </div>
         <div class="stat">
             <div class="stat-num" style="color:var(--gold)" data-count="7" data-suffix="+">0</div>
-            <div class="stat-text">Diabetes Types</div>
+            <div class="stat-text" data-i18n="stat_types">Diabetes Types</div>
         </div>
         <div class="stat">
             <div class="stat-num" style="color:var(--blue)" data-count="6" data-suffix="">0</div>
-            <div class="stat-text">Macro Nutrients</div>
+            <div class="stat-text" data-i18n="stat_macros">Macro Nutrients</div>
         </div>
         <div class="stat">
             <div class="stat-num" style="color:var(--warn)" data-count="5" data-suffix="s">0</div>
-            <div class="stat-text">Scan Speed</div>
+            <div class="stat-text" data-i18n="stat_speed">Scan Speed</div>
         </div>
     </div>
 </div>
@@ -993,12 +1027,12 @@
 <!-- CTA -->
 <section class="cta">
     <div class="cta-glow" id="cta-glow"></div>
-    <div class="section-label">Get started</div>
-    <h2 class="section-heading" style="margin-bottom:16px">Take control of<br><em>what you eat</em></h2>
-    <p class="section-sub">Free to download. Your smarter health journey starts now.</p>
+    <div class="section-label" data-i18n="cta_label">Get started</div>
+    <h2 class="section-heading" data-i18n="cta_title" style="margin-bottom:16px">Take control of<br><em>what you eat</em></h2>
+    <p class="section-sub" data-i18n="cta_sub">Free to download. Your smarter health journey starts now.</p>
     <a href="#" class="btn-primary">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        Download for iOS
+        <span data-i18n="hero_download">Download for iOS</span>
     </a>
 </section>
 
@@ -1007,25 +1041,25 @@
     <div class="footer-top">
         <div>
             <div class="footer-brand">
-                <div class="footer-brand-mark">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                <div class="footer-brand-mark" style="border-radius:8px;overflow:hidden">
+                    <img src="icon.png" alt="DiaBuddy" width="28" height="28" style="display:block">
                 </div>
                 DiaBuddy
             </div>
-            <p class="footer-tagline">AI nutrition tracking for people with diabetes. Scan, understand, eat better.</p>
+            <p class="footer-tagline" data-i18n="footer_tagline">AI nutrition tracking for people with diabetes. Scan, understand, eat better.</p>
         </div>
         <div class="footer-cols">
             <div class="footer-col">
-                <h4>Product</h4>
-                <a href="#features">Features</a>
-                <a href="#how">How it works</a>
-                <a href="#">Download</a>
+                <h4 data-i18n="footer_product">Product</h4>
+                <a href="#features" data-i18n="nav_features">Features</a>
+                <a href="#how" data-i18n="nav_how">How it works</a>
+                <a href="#" data-i18n="footer_download">Download</a>
             </div>
             <div class="footer-col">
-                <h4>Legal</h4>
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="support.html">Support</a>
-                <a href="mailto:dia.buddy2026@mail.ru">Contact</a>
+                <h4 data-i18n="footer_legal">Legal</h4>
+                <a href="privacy.html" data-i18n="footer_privacy">Privacy Policy</a>
+                <a href="support.html" data-i18n="nav_support">Support</a>
+                <a href="mailto:dia.buddy2026@mail.ru" data-i18n="footer_contact">Contact</a>
             </div>
         </div>
     </div>
@@ -1207,6 +1241,106 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
         }
     });
 });
+
+// ===== i18n TRANSLATIONS =====
+const translations = {
+    en: {
+        nav_features: "Features", nav_how: "How it works", nav_support: "Support", nav_cta: "Get the App",
+        hero_badge: "Now available on the App Store",
+        hero_title: 'Scan your food,<br><em>know your numbers.</em>',
+        hero_desc: "The AI nutrition companion purpose-built for diabetes. Point your camera at any meal, get instant macro analysis, safety alerts, and glycemic ratings.",
+        hero_download: "Download for iOS", hero_explore: "Explore features",
+        trust_label: "Built with",
+        feat_label: "Features", feat_title: 'Intelligence meets<br><em>nutrition tracking</em>',
+        feat_sub: "Every feature designed to give you confidence in what you eat and peace of mind about your health.",
+        feat_scanner_title: "AI Food Scanner", feat_scanner_desc: "Point your camera at any food — a home-cooked meal, restaurant dish, or packaged snack. Our AI identifies what you're eating, estimates portions, and returns a full nutritional breakdown in seconds.",
+        feat_alerts_title: "Diabetes Safety Alerts", feat_alerts_desc: "Instant warnings for foods that may spike glucose or pose risks for your specific diabetes type.",
+        feat_stats_title: "Weekly Statistics", feat_stats_desc: "Interactive charts for calories and macros.",
+        feat_meal_title: "Auto Meal Sorting", feat_meal_desc: "Scanned food is auto-categorized into breakfast, lunch, dinner, or snack based on time of day.",
+        feat_macro_title: "Full Macro Breakdown", feat_macro_desc: "Every nutrient, at a glance.",
+        feat_privacy_title: "Privacy First", feat_privacy_desc: "Encrypted storage on Supabase. Food photos are analyzed and discarded — never stored by AI services. We never sell or monetize your health data.",
+        feat_lang_title: "Multilingual", feat_lang_desc: "Full support for English, Russian, and Uzbek. Interface, AI analysis, and safety alerts — all in your language. Covering 7+ diabetes types with personalized guidance.",
+        how_label: "How it works", how_title: 'Three steps to<br><em>smarter eating</em>', how_sub: "From camera to insight in under five seconds.",
+        step1_title: "Scan your food", step1_desc: "Open the camera, point at any meal or snack. Snap a photo, or pick from your gallery. Works with any cuisine.",
+        step2_title: "Get instant analysis", step2_desc: "AI returns calories, all macros, glycemic index, and a safety rating for your diabetes type — in seconds.",
+        step3_title: "Track your progress", step3_desc: "View weekly charts, monitor trends, and stay on top of your daily goals. Organized by meal automatically.",
+        stat_lang: "Languages", stat_types: "Diabetes Types", stat_macros: "Macro Nutrients", stat_speed: "Scan Speed",
+        cta_label: "Get started", cta_title: 'Take control of<br><em>what you eat</em>', cta_sub: "Free to download. Your smarter health journey starts now.",
+        footer_tagline: "AI nutrition tracking for people with diabetes. Scan, understand, eat better.",
+        footer_product: "Product", footer_legal: "Legal", footer_download: "Download", footer_privacy: "Privacy Policy", footer_contact: "Contact"
+    },
+    ru: {
+        nav_features: "Функции", nav_how: "Как работает", nav_support: "Поддержка", nav_cta: "Скачать",
+        hero_badge: "Уже в App Store",
+        hero_title: 'Сканируй еду,<br><em>знай свои числа.</em>',
+        hero_desc: "AI-помощник по питанию, созданный для диабета. Наведите камеру на любое блюдо — получите анализ макронутриентов, предупреждения и гликемический индекс.",
+        hero_download: "Скачать для iOS", hero_explore: "Узнать больше",
+        trust_label: "Создано с помощью",
+        feat_label: "Функции", feat_title: 'Интеллект встречает<br><em>трекинг питания</em>',
+        feat_sub: "Каждая функция создана, чтобы вы были уверены в том, что едите, и спокойны за своё здоровье.",
+        feat_scanner_title: "AI Сканер еды", feat_scanner_desc: "Наведите камеру на любую еду — домашнее блюдо, ресторанное или упакованное. Наш AI определит, что вы едите, оценит порцию и выдаст полный нутриентный анализ за секунды.",
+        feat_alerts_title: "Предупреждения для диабета", feat_alerts_desc: "Мгновенные предупреждения о продуктах, которые могут повысить глюкозу или создать риск для вашего типа диабета.",
+        feat_stats_title: "Недельная статистика", feat_stats_desc: "Интерактивные графики калорий и макронутриентов.",
+        feat_meal_title: "Авто-сортировка приёмов пищи", feat_meal_desc: "Отсканированная еда автоматически распределяется по завтраку, обеду, ужину или перекусу по времени суток.",
+        feat_macro_title: "Полный анализ макросов", feat_macro_desc: "Все нутриенты на одном экране.",
+        feat_privacy_title: "Приватность прежде всего", feat_privacy_desc: "Зашифрованное хранение в Supabase. Фото еды анализируются и удаляются — AI-сервисы их не сохраняют. Мы никогда не продаём ваши данные.",
+        feat_lang_title: "Мультиязычность", feat_lang_desc: "Полная поддержка английского, русского и узбекского. Интерфейс, AI-анализ и предупреждения — всё на вашем языке. Поддержка 7+ типов диабета.",
+        how_label: "Как работает", how_title: 'Три шага к<br><em>умному питанию</em>', how_sub: "От камеры до результата за пять секунд.",
+        step1_title: "Сканируйте еду", step1_desc: "Откройте камеру, наведите на любое блюдо. Сделайте фото или выберите из галереи. Работает с любой кухней.",
+        step2_title: "Мгновенный анализ", step2_desc: "AI выдаёт калории, все макросы, гликемический индекс и оценку безопасности для вашего типа диабета — за секунды.",
+        step3_title: "Отслеживайте прогресс", step3_desc: "Смотрите недельные графики, следите за трендами и контролируйте дневные цели. Всё организовано по приёмам пищи автоматически.",
+        stat_lang: "Языков", stat_types: "Типов диабета", stat_macros: "Макронутриентов", stat_speed: "Скорость скана",
+        cta_label: "Начните сейчас", cta_title: 'Возьмите под контроль<br><em>своё питание</em>', cta_sub: "Бесплатно для скачивания. Ваш путь к здоровью начинается сейчас.",
+        footer_tagline: "AI-трекинг питания для людей с диабетом. Сканируй, понимай, ешь лучше.",
+        footer_product: "Продукт", footer_legal: "Правовая информация", footer_download: "Скачать", footer_privacy: "Политика конфиденциальности", footer_contact: "Контакты"
+    },
+    uz: {
+        nav_features: "Funksiyalar", nav_how: "Qanday ishlaydi", nav_support: "Yordam", nav_cta: "Yuklab olish",
+        hero_badge: "App Store'da mavjud",
+        hero_title: 'Ovqatni skanerlang,<br><em>raqamlaringizni biling.</em>',
+        hero_desc: "Diabet uchun yaratilgan AI ovqatlanish yordamchisi. Kamerani istalgan taomga yo'naltiring — makro tahlil, xavfsizlik ogohlantirishlari va glikemik indeksni oling.",
+        hero_download: "iOS uchun yuklab olish", hero_explore: "Batafsil",
+        trust_label: "Yaratilgan texnologiyalar",
+        feat_label: "Funksiyalar", feat_title: 'Intellekt<br><em>ovqatlanish trekingiga</em> javob beradi',
+        feat_sub: "Har bir funksiya sizga ovqatlanishingizga ishonch va sog'lig'ingiz haqida xotirjamlik berish uchun yaratilgan.",
+        feat_scanner_title: "AI Ovqat Skaneri", feat_scanner_desc: "Kamerani istalgan ovqatga yo'naltiring — uy taomi, restoran taomi yoki tayyor mahsulot. AI nima yeyayotganingizni aniqlaydi, porsiyani baholaydi va to'liq ozuqa tahlilini soniyalarda beradi.",
+        feat_alerts_title: "Diabet Xavfsizlik Ogohlantirishlari", feat_alerts_desc: "Glyukozani oshirishi yoki diabet turingiz uchun xavf tug'dirishi mumkin bo'lgan mahsulotlar haqida tezkor ogohlantirishlar.",
+        feat_stats_title: "Haftalik Statistika", feat_stats_desc: "Kaloriya va makronutrientlar uchun interaktiv grafiklar.",
+        feat_meal_title: "Avtomatik Ovqat Tartibi", feat_meal_desc: "Skanerlangan ovqat kun vaqtiga qarab nonushta, tushlik, kechki ovqat yoki gazak sifatida avtomatik tartiblanadi.",
+        feat_macro_title: "To'liq Makro Tahlil", feat_macro_desc: "Barcha ozuqa moddalari bir qarashda.",
+        feat_privacy_title: "Maxfiylik birinchi o'rinda", feat_privacy_desc: "Supabase'da shifrlangan saqlash. Ovqat suratlari tahlil qilinadi va o'chiriladi — AI xizmatlari ularni saqlamaydi. Biz hech qachon ma'lumotlaringizni sotmaymiz.",
+        feat_lang_title: "Ko'p tilli", feat_lang_desc: "Ingliz, rus va o'zbek tillarini to'liq qo'llab-quvvatlash. Interfeys, AI tahlil va ogohlantirishlar — barchasi sizning tilingizda. 7+ diabet turini qo'llab-quvvatlash.",
+        how_label: "Qanday ishlaydi", how_title: "Aqlli ovqatlanishga<br><em>uch qadam</em>", how_sub: "Kameradan natijagacha besh soniyada.",
+        step1_title: "Ovqatni skanerlang", step1_desc: "Kamerani oching, istalgan taomga yo'naltiring. Surat oling yoki galereyadan tanlang. Istalgan oshxona bilan ishlaydi.",
+        step2_title: "Tezkor tahlil oling", step2_desc: "AI kaloriya, barcha makroslar, glikemik indeks va diabet turingiz uchun xavfsizlik baholashini — soniyalarda beradi.",
+        step3_title: "Progressni kuzating", step3_desc: "Haftalik grafiklarni ko'ring, tendensiyalarni kuzating va kunlik maqsadlaringizni nazorat qiling. Avtomatik ovqat tartibida.",
+        stat_lang: "Tillar", stat_types: "Diabet turlari", stat_macros: "Makronutrientlar", stat_speed: "Skanerlash tezligi",
+        cta_label: "Boshlang", cta_title: "Ovqatlanishingizni<br><em>nazorat qiling</em>", cta_sub: "Bepul yuklab olish. Sog'lom hayot yo'lingiz hozir boshlanadi.",
+        footer_tagline: "Diabetli odamlar uchun AI ovqatlanish trekeri. Skanerlang, tushuning, yaxshiroq ovqatlaning.",
+        footer_product: "Mahsulot", footer_legal: "Huquqiy", footer_download: "Yuklab olish", footer_privacy: "Maxfiylik siyosati", footer_contact: "Aloqa"
+    }
+};
+
+function setLang(lang) {
+    localStorage.setItem("diabuddy-lang", lang);
+    document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+    document.documentElement.lang = lang === "uz" ? "uz" : lang === "ru" ? "ru" : "en";
+    const t = translations[lang] || translations.en;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) el.innerHTML = t[key];
+    });
+}
+
+document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.addEventListener("click", () => setLang(btn.dataset.lang));
+});
+
+// Init language from localStorage or browser
+const savedLang = localStorage.getItem("diabuddy-lang");
+if (savedLang && translations[savedLang]) {
+    setLang(savedLang);
+}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
 </body>

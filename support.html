@@ -27,10 +27,15 @@
         .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 24px; }
         .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; background: rgba(5,5,5,0.85); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid var(--border); border-radius: 100px; padding: 12px 12px 12px 24px; }
         .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); font-weight: 600; font-size: 16px; letter-spacing: -0.02em; }
-        .nav-logo { width: 34px; height: 34px; background: linear-gradient(135deg, var(--accent), #00b894); border-radius: 10px; display: grid; place-items: center; box-shadow: 0 0 20px rgba(0,224,184,0.2); }
+        .nav-logo { width: 34px; height: 34px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+        .nav-logo img { width: 100%; height: 100%; object-fit: cover; }
         .nav-links { display: flex; align-items: center; gap: 2px; }
         .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 13.5px; font-weight: 500; padding: 8px 16px; border-radius: 100px; transition: all 0.3s var(--ease); }
         .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .lang-switch { display: flex; align-items: center; gap: 2px; padding: 4px; background: rgba(255,255,255,0.04); border-radius: 100px; border: 1px solid var(--border); }
+        .lang-btn { padding: 5px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; border: none; background: none; transition: all 0.3s var(--ease); letter-spacing: 0.02em; font-family: var(--sans); }
+        .lang-btn:hover { color: var(--text); }
+        .lang-btn.active { background: rgba(255,255,255,0.1); color: var(--text); }
 
         .page-hero { padding: 160px 24px 80px; text-align: center; position: relative; overflow: hidden; }
         .page-hero-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, rgba(0,224,184,0.1), transparent 70%); pointer-events: none; opacity: 0; }
@@ -93,26 +98,31 @@
 <nav class="nav">
     <div class="nav-inner">
         <a href="index.html" class="nav-brand">
-            <div class="nav-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
+            <div class="nav-logo"><img src="icon.png" alt="DiaBuddy"></div>
             DiaBuddy
         </a>
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="privacy.html">Privacy</a>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="uz">UZ</button>
+            </div>
         </div>
     </div>
 </nav>
 
 <div class="page-hero">
     <div class="page-hero-glow" id="hero-glow"></div>
-    <h1><em>Support</em></h1>
-    <p>We're here to help you on your health journey</p>
+    <h1 data-i18n="title"><em>Support</em></h1>
+    <p data-i18n="subtitle">We're here to help you on your health journey</p>
 </div>
 
 <div class="content">
     <div class="contact-card" id="contact">
-        <h2>Get in Touch</h2>
-        <p>Having issues or have a suggestion? We'd love to hear from you and will respond as soon as possible.</p>
+        <h2 data-i18n="contact_title">Get in Touch</h2>
+        <p data-i18n="contact_desc">Having issues or have a suggestion? We'd love to hear from you and will respond as soon as possible.</p>
         <a href="mailto:dia.buddy2026@mail.ru" class="contact-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             dia.buddy2026@mail.ru
@@ -120,13 +130,13 @@
     </div>
 
     <div class="faq-card" id="faq">
-        <h2>Frequently Asked Questions</h2>
-        <div class="faq-item"><h3>How does the AI food scanner work?</h3><p>Simply point your camera at any food or pick a photo from your gallery. Our AI analyzes the image and provides detailed nutritional information including calories, proteins, carbs, fats, sugar, and glycemic index.</p></div>
-        <div class="faq-item"><h3>Is DiaBuddy free?</h3><p>DiaBuddy offers a free tier with basic features. Premium features are available through in-app subscription.</p></div>
-        <div class="faq-item"><h3>How accurate is the nutritional analysis?</h3><p>Our AI provides estimates based on visual analysis. For precise measurements, we recommend verifying with food packaging labels when available.</p></div>
-        <div class="faq-item"><h3>Can I delete my account?</h3><p>Yes. Go to Profile, scroll down, and tap "Delete Account". This will permanently remove all your data from our servers.</p></div>
-        <div class="faq-item"><h3>What languages are supported?</h3><p>DiaBuddy currently supports Russian, English, and Uzbek languages.</p></div>
-        <div class="faq-item"><h3>Is my health data safe?</h3><p>Yes. All data is encrypted in transit and at rest. We never sell your personal information. Read our full <a href="privacy.html">Privacy Policy</a> for details.</p></div>
+        <h2 data-i18n="faq_title">Frequently Asked Questions</h2>
+        <div class="faq-item"><h3 data-i18n="faq1_q">How does the AI food scanner work?</h3><p data-i18n="faq1_a">Simply point your camera at any food or pick a photo from your gallery. Our AI analyzes the image and provides detailed nutritional information including calories, proteins, carbs, fats, sugar, and glycemic index.</p></div>
+        <div class="faq-item"><h3 data-i18n="faq2_q">Is DiaBuddy free?</h3><p data-i18n="faq2_a">DiaBuddy offers a free tier with basic features. Premium features are available through in-app subscription.</p></div>
+        <div class="faq-item"><h3 data-i18n="faq3_q">How accurate is the nutritional analysis?</h3><p data-i18n="faq3_a">Our AI provides estimates based on visual analysis. For precise measurements, we recommend verifying with food packaging labels when available.</p></div>
+        <div class="faq-item"><h3 data-i18n="faq4_q">Can I delete my account?</h3><p data-i18n="faq4_a">Yes. Go to Profile, scroll down, and tap "Delete Account". This will permanently remove all your data from our servers.</p></div>
+        <div class="faq-item"><h3 data-i18n="faq5_q">What languages are supported?</h3><p data-i18n="faq5_a">DiaBuddy currently supports Russian, English, and Uzbek languages.</p></div>
+        <div class="faq-item"><h3 data-i18n="faq6_q">Is my health data safe?</h3><p data-i18n="faq6_a">Yes. All data is encrypted in transit and at rest. We never sell your personal information. Read our full <a href="privacy.html">Privacy Policy</a> for details.</p></div>
     </div>
 </div>
 
@@ -153,6 +163,57 @@ gsap.to("#faq", {
     opacity: 1, y: 0, duration: 0.9, ease: "expo.out",
     scrollTrigger: { trigger: "#faq", start: "top 88%" }
 });
+
+// i18n
+const translations = {
+    en: {
+        title: '<em>Support</em>', subtitle: "We're here to help you on your health journey",
+        contact_title: "Get in Touch", contact_desc: "Having issues or have a suggestion? We'd love to hear from you and will respond as soon as possible.",
+        faq_title: "Frequently Asked Questions",
+        faq1_q: "How does the AI food scanner work?", faq1_a: "Simply point your camera at any food or pick a photo from your gallery. Our AI analyzes the image and provides detailed nutritional information including calories, proteins, carbs, fats, sugar, and glycemic index.",
+        faq2_q: "Is DiaBuddy free?", faq2_a: "DiaBuddy offers a free tier with basic features. Premium features are available through in-app subscription.",
+        faq3_q: "How accurate is the nutritional analysis?", faq3_a: "Our AI provides estimates based on visual analysis. For precise measurements, we recommend verifying with food packaging labels when available.",
+        faq4_q: "Can I delete my account?", faq4_a: 'Yes. Go to Profile, scroll down, and tap "Delete Account". This will permanently remove all your data from our servers.',
+        faq5_q: "What languages are supported?", faq5_a: "DiaBuddy currently supports Russian, English, and Uzbek languages.",
+        faq6_q: "Is my health data safe?", faq6_a: 'Yes. All data is encrypted in transit and at rest. We never sell your personal information. Read our full <a href="privacy.html">Privacy Policy</a> for details.'
+    },
+    ru: {
+        title: '<em>Поддержка</em>', subtitle: "Мы здесь, чтобы помочь вам на пути к здоровью",
+        contact_title: "Связаться с нами", contact_desc: "Есть проблемы или предложения? Мы будем рады услышать вас и ответим как можно скорее.",
+        faq_title: "Часто задаваемые вопросы",
+        faq1_q: "Как работает AI сканер еды?", faq1_a: "Просто наведите камеру на любую еду или выберите фото из галереи. Наш AI анализирует изображение и предоставляет подробную информацию о питательной ценности: калории, белки, углеводы, жиры, сахар и гликемический индекс.",
+        faq2_q: "DiaBuddy бесплатный?", faq2_a: "DiaBuddy предлагает бесплатный тариф с базовыми функциями. Премиум-функции доступны через подписку в приложении.",
+        faq3_q: "Насколько точен анализ питания?", faq3_a: "Наш AI предоставляет оценки на основе визуального анализа. Для точных измерений рекомендуем проверять с этикетками на упаковке.",
+        faq4_q: "Могу ли я удалить аккаунт?", faq4_a: 'Да. Перейдите в Профиль, прокрутите вниз и нажмите «Удалить аккаунт». Все ваши данные будут безвозвратно удалены с наших серверов.',
+        faq5_q: "Какие языки поддерживаются?", faq5_a: "DiaBuddy поддерживает русский, английский и узбекский языки.",
+        faq6_q: "Мои данные о здоровье в безопасности?", faq6_a: 'Да. Все данные зашифрованы при передаче и хранении. Мы никогда не продаём вашу личную информацию. Подробнее в нашей <a href="privacy.html">Политике конфиденциальности</a>.'
+    },
+    uz: {
+        title: '<em>Yordam</em>', subtitle: "Sog'lom hayot yo'lingizda sizga yordam beramiz",
+        contact_title: "Bog'lanish", contact_desc: "Muammolar yoki takliflar bormi? Sizdan eshitishdan xursand bo'lamiz va imkon qadar tezroq javob beramiz.",
+        faq_title: "Ko'p beriladigan savollar",
+        faq1_q: "AI ovqat skaneri qanday ishlaydi?", faq1_a: "Kamerani istalgan ovqatga yo'naltiring yoki galereyadan surat tanlang. AI rasmni tahlil qiladi va kaloriya, oqsil, uglevodlar, yog'lar, shakar va glikemik indeks haqida batafsil ma'lumot beradi.",
+        faq2_q: "DiaBuddy bepulmi?", faq2_a: "DiaBuddy asosiy funksiyalarga ega bepul tarifni taklif qiladi. Premium funksiyalar ilova ichidagi obuna orqali mavjud.",
+        faq3_q: "Ovqatlanish tahlili qanchalik aniq?", faq3_a: "AI vizual tahlil asosida baho beradi. Aniq o'lchovlar uchun qadoq etiketkalarini tekshirishni tavsiya qilamiz.",
+        faq4_q: "Hisobimni o'chirish mumkinmi?", faq4_a: "Ha. Profilga o'ting, pastga aylantiring va \"Hisobni o'chirish\" tugmasini bosing. Bu barcha ma'lumotlaringizni serverlarimizdan butunlay o'chiradi.",
+        faq5_q: "Qaysi tillar qo'llab-quvvatlanadi?", faq5_a: "DiaBuddy hozirda rus, ingliz va o'zbek tillarini qo'llab-quvvatlaydi.",
+        faq6_q: "Sog'liq ma'lumotlarim xavfsizmi?", faq6_a: 'Ha. Barcha ma\'lumotlar uzatish va saqlashda shifrlangan. Biz hech qachon shaxsiy ma\'lumotlaringizni sotmaymiz. Batafsil <a href="privacy.html">Maxfiylik siyosati</a>da o\'qing.'
+    }
+};
+function setLang(lang) {
+    localStorage.setItem("diabuddy-lang", lang);
+    document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+    const t = translations[lang] || translations.en;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key]) el.innerHTML = t[key];
+    });
+}
+document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.addEventListener("click", () => setLang(btn.dataset.lang));
+});
+const savedLang = localStorage.getItem("diabuddy-lang");
+if (savedLang && translations[savedLang]) setLang(savedLang);
 </script>
 </body>
 </html>
